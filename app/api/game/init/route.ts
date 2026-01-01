@@ -1,5 +1,4 @@
 export async function GET() {
-  // Simulate fetching from a database or complex simulation service
   const worldData = {
     worldPopulation: 8000000000,
     baseInfectionRate: 0.001,

@@ -104,7 +104,7 @@ export default function CountryDetailSheet() {
           </SheetDescription>
         </SheetHeader>
 
-        {/* Infection Stats */}
+        {}
         <div className="space-y-4 mb-6">
           <div className="p-4 rounded-2xl bg-zinc-900/80 border border-white/5">
             <div className="flex justify-between items-center mb-3">
@@ -146,7 +146,7 @@ export default function CountryDetailSheet() {
             </div>
           </div>
 
-          {/* Awareness & Healthcare */}
+          {}
           <div className="grid grid-cols-2 gap-3">
             <div className="p-4 rounded-2xl bg-zinc-900/80 border border-white/5">
               <div className="flex items-center gap-2 mb-2">
@@ -190,7 +190,7 @@ export default function CountryDetailSheet() {
             </div>
           </div>
 
-          {/* Transport Status */}
+          {}
           <div className="p-4 rounded-2xl bg-zinc-900/80 border border-white/5">
             <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3">
               Transport Status
@@ -235,7 +235,7 @@ export default function CountryDetailSheet() {
             </div>
           </div>
 
-          {/* Research Contribution */}
+          {}
           {country.researchContribution > 0 && (
             <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
               <div className="flex items-center justify-between">

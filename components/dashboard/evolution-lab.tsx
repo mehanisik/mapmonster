@@ -81,7 +81,7 @@ function TraitCard({
         )}
       </div>
 
-      {/* Stat changes */}
+      {}
       <div className="flex gap-2 mt-3 flex-wrap">
         {trait.infectivity > 0 && (
           <span className="text-[9px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 font-mono">
@@ -100,14 +100,14 @@ function TraitCard({
         )}
       </div>
 
-      {/* Prerequisites */}
+      {}
       {trait.prerequisites.length > 0 && !isOwned && (
         <div className="mt-2 text-[9px] text-zinc-600">
           Requires: {trait.prerequisites.join(', ')}
         </div>
       )}
 
-      {/* Purchase button */}
+      {}
       {!isOwned && (
         <Button
           size="sm"
@@ -156,7 +156,7 @@ export default function EvolutionLab() {
 
   return (
     <div className="space-y-4">
-      {/* DNA Counter */}
+      {}
       <div className="flex items-center justify-between bg-zinc-900/80 p-4 rounded-2xl border border-white/10">
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-purple-600 rounded-xl shadow-lg shadow-purple-900/30">
@@ -181,7 +181,7 @@ export default function EvolutionLab() {
         </div>
       </div>
 
-      {/* Trait Tabs */}
+      {}
       <Tabs defaultValue="transmission" className="w-full">
         <TabsList className="w-full bg-zinc-900/60 border border-white/5 p-1 rounded-2xl">
           <TabsTrigger

@@ -27,7 +27,7 @@ export default function GameStats() {
   return (
     <div className="fixed top-0 left-0 right-0 p-6 z-50 pointer-events-none">
       <div className="max-w-5xl mx-auto flex items-stretch gap-4 pointer-events-auto">
-        {/* Total Infected Stats */}
+        {}
         <div className="bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-[2rem] px-6 py-3 flex items-center gap-4 shadow-2xl">
           <div className="p-2 bg-red-600 rounded-2xl shadow-lg shadow-red-900/20">
             <HugeiconsIcon
@@ -46,7 +46,7 @@ export default function GameStats() {
           </div>
         </div>
 
-        {/* Global Progress Bar */}
+        {}
         <div className="flex-1 bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-[2rem] px-8 py-3 flex flex-col justify-center gap-2 shadow-2xl">
           <div className="flex justify-between items-end">
             <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
@@ -70,7 +70,7 @@ export default function GameStats() {
           />
         </div>
 
-        {/* Cure Progress */}
+        {}
         <div className="bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-[2rem] px-6 py-3 flex flex-col justify-center gap-2 shadow-2xl min-w-[200px]">
           <div className="flex justify-between items-end">
             <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">

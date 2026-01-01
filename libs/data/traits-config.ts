@@ -5,12 +5,12 @@
 
 import type { TraitConfig } from '../types/game'
 
-// ============================================================================
-// TRANSMISSION TRAITS
-// ============================================================================
+
+
+
 
 export const TRANSMISSIONS: Record<string, TraitConfig> = {
-  // Air transmission tree
+  
   air_1: {
     id: 'air_1',
     name: 'Airborne I',
@@ -36,7 +36,7 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  // Water transmission tree
+  
   water_1: {
     id: 'water_1',
     name: 'Waterborne I',
@@ -62,7 +62,7 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  // Blood transmission tree
+  
   blood_1: {
     id: 'blood_1',
     name: 'Blood Contact',
@@ -88,7 +88,7 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  // Insect transmission tree
+  
   insect_1: {
     id: 'insect_1',
     name: 'Insect Vector I',
@@ -113,7 +113,7 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  // Rodent transmission tree
+  
   rodent_1: {
     id: 'rodent_1',
     name: 'Rodent Vector I',
@@ -139,7 +139,7 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  // Livestock transmission
+  
   livestock_1: {
     id: 'livestock_1',
     name: 'Zoonotic Shift',
@@ -165,7 +165,7 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  // Combined extreme transmission
+  
   extreme_bioaerosol: {
     id: 'extreme_bioaerosol',
     name: 'Extreme Bioaerosol',
@@ -180,12 +180,12 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
 }
 
-// ============================================================================
-// SYMPTOM TRAITS
-// ============================================================================
+
+
+
 
 export const SYMPTOMS: Record<string, TraitConfig> = {
-  // Tier 1 - Mild symptoms
+  
   coughing: {
     id: 'coughing',
     name: 'Coughing',
@@ -232,7 +232,7 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
     category: 'symptom',
   },
 
-  // Tier 2 - Moderate symptoms
+  
   fever: {
     id: 'fever',
     name: 'Fever',
@@ -292,7 +292,7 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
     category: 'symptom',
   },
 
-  // Tier 3 - Severe symptoms
+  
   pneumonia: {
     id: 'pneumonia',
     name: 'Pneumonia',
@@ -351,7 +351,7 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
     category: 'symptom',
   },
 
-  // Tier 4 - Lethal symptoms
+  
   necrosis: {
     id: 'necrosis',
     name: 'Necrosis',
@@ -388,12 +388,12 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
 }
 
-// ============================================================================
-// ABILITY TRAITS
-// ============================================================================
+
+
+
 
 export const ABILITIES: Record<string, TraitConfig> = {
-  // Cold resistance tree
+  
   cold_1: {
     id: 'cold_1',
     name: 'Cold Resistance I',
@@ -419,7 +419,7 @@ export const ABILITIES: Record<string, TraitConfig> = {
     category: 'ability',
   },
 
-  // Heat resistance tree
+  
   heat_1: {
     id: 'heat_1',
     name: 'Heat Resistance I',
@@ -445,7 +445,7 @@ export const ABILITIES: Record<string, TraitConfig> = {
     category: 'ability',
   },
 
-  // Drug resistance tree
+  
   drug_1: {
     id: 'drug_1',
     name: 'Drug Resistance I',
@@ -470,7 +470,7 @@ export const ABILITIES: Record<string, TraitConfig> = {
     category: 'ability',
   },
 
-  // Genetic abilities
+  
   hardening_1: {
     id: 'hardening_1',
     name: 'Genetic Hardening I',
@@ -518,7 +518,7 @@ export const ABILITIES: Record<string, TraitConfig> = {
     category: 'ability',
   },
 
-  // Environmental survival
+  
   environmental_hardening: {
     id: 'environmental_hardening',
     name: 'Environmental Hardening',
@@ -532,19 +532,19 @@ export const ABILITIES: Record<string, TraitConfig> = {
   },
 }
 
-// Combine all traits
+
 export const ALL_TRAITS: Record<string, TraitConfig> = {
   ...TRANSMISSIONS,
   ...SYMPTOMS,
   ...ABILITIES,
 }
 
-// Get trait by ID
+
 export function getTrait(id: string): TraitConfig | undefined {
   return ALL_TRAITS[id]
 }
 
-// Check if trait can be purchased
+
 export function canPurchaseTrait(
   traitId: string,
   ownedTraits: string[],
@@ -555,11 +555,11 @@ export function canPurchaseTrait(
   if (ownedTraits.includes(traitId)) return false
   if (dnaPoints < trait.cost) return false
 
-  // Check prerequisites
+  
   return trait.prerequisites.every((prereq) => ownedTraits.includes(prereq))
 }
 
-// Get available traits (can be purchased)
+
 export function getAvailableTraits(
   ownedTraits: string[],
   dnaPoints: number
@@ -569,7 +569,7 @@ export function getAvailableTraits(
   )
 }
 
-// Calculate disease stats from owned traits
+
 export function calculateDiseaseStats(ownedTraits: string[]): {
   infectivity: number
   severity: number

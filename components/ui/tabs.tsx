@@ -1,5 +1,6 @@
 'use client'
 
+import { Activity } from 'react'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 import type * as React from 'react'
 
@@ -59,7 +60,11 @@ function TabsContent({
       data-slot="tabs-content"
       className={cn('flex-1 outline-none', className)}
       {...props}
-    />
+    >
+      <Activity mode="visible">
+        {props.children}
+      </Activity>
+    </TabsPrimitive.Content>
   )
 }
 

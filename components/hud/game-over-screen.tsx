@@ -40,7 +40,7 @@ export default function GameOverScreen() {
   return (
     <div className="fixed inset-0 z-200 flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-500">
       <Card className="w-[480px] p-8 relative overflow-hidden border-white/5 bg-zinc-900/80 backdrop-blur-2xl shadow-2xl shadow-black rounded-3xl">
-        {/* Background glow */}
+        {}
         <div
           className={`absolute inset-0 ${
             isWin
@@ -49,9 +49,9 @@ export default function GameOverScreen() {
           }`}
         />
 
-        {/* Content */}
+        {}
         <div className="relative z-10">
-          {/* Icon & Title */}
+          {}
           <div className="text-center mb-8">
             <div
               className={`inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 ${
@@ -78,7 +78,7 @@ export default function GameOverScreen() {
             </p>
           </div>
 
-          {/* Stats Grid */}
+          {}
           <div className="grid grid-cols-3 gap-3 mb-6">
             <div className="p-4 rounded-2xl bg-zinc-800/50 border border-white/5 text-center">
               <HugeiconsIcon
@@ -121,7 +121,7 @@ export default function GameOverScreen() {
             </div>
           </div>
 
-          {/* Additional Stats */}
+          {}
           <div className="grid grid-cols-2 gap-3 mb-8">
             <div className="p-3 rounded-xl bg-zinc-800/30 border border-white/5 flex items-center gap-3">
               <div className="p-2 bg-purple-600/20 rounded-lg">
@@ -159,7 +159,7 @@ export default function GameOverScreen() {
             </div>
           </div>
 
-          {/* Play Again Button */}
+          {}
           <Button
             onClick={handlePlayAgain}
             className={`w-full h-14 rounded-2xl text-lg font-black tracking-wide transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl ${

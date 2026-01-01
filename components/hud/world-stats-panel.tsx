@@ -29,7 +29,7 @@ export default function WorldStatsPanel() {
   return (
     <div className="fixed top-0 left-0 right-0 p-4 z-50 pointer-events-none">
       <div className="max-w-6xl mx-auto flex items-stretch gap-3 pointer-events-auto">
-        {/* Infected Stats */}
+        {}
         <div className="bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl">
           <div className="p-2 bg-red-600 rounded-xl shadow-lg shadow-red-900/30">
             <HugeiconsIcon
@@ -48,7 +48,7 @@ export default function WorldStatsPanel() {
           </div>
         </div>
 
-        {/* Dead Stats */}
+        {}
         <div className="bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl">
           <div className="p-2 bg-purple-600 rounded-xl shadow-lg shadow-purple-900/30">
             <HugeiconsIcon icon={SkullIcon} size={18} className="text-white" />
@@ -63,7 +63,7 @@ export default function WorldStatsPanel() {
           </div>
         </div>
 
-        {/* Global Progress Bar */}
+        {}
         <div className="flex-1 bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-2xl px-5 py-3 flex flex-col justify-center gap-1.5 shadow-xl">
           <div className="flex justify-between items-end">
             <div className="flex items-center gap-2 text-[9px] font-bold text-zinc-400 uppercase tracking-widest">
@@ -92,7 +92,7 @@ export default function WorldStatsPanel() {
           />
         </div>
 
-        {/* Cure Progress */}
+        {}
         <div className="bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-2xl px-5 py-3 flex flex-col justify-center gap-1.5 shadow-xl min-w-[180px]">
           <div className="flex justify-between items-end">
             <div className="flex items-center gap-2 text-[9px] font-bold text-zinc-400 uppercase tracking-widest">
@@ -121,7 +121,7 @@ export default function WorldStatsPanel() {
           )}
         </div>
 
-        {/* DNA Points */}
+        {}
         <div className="bg-zinc-900/80 backdrop-blur-2xl border border-purple-500/20 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl">
           <div className="p-2 bg-purple-600 rounded-xl shadow-lg shadow-purple-900/40">
             <HugeiconsIcon icon={DnaIcon} size={18} className="text-white" />
@@ -136,7 +136,7 @@ export default function WorldStatsPanel() {
           </div>
         </div>
 
-        {/* Disease Stats */}
+        {}
         <div className="bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-2xl px-4 py-3 shadow-xl">
           <div className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
             Disease

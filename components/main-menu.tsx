@@ -78,7 +78,7 @@ export default function MainMenu() {
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-zinc-950/90 backdrop-blur-xl transition-all duration-700">
-      {/* Background effects */}
+      {}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/20 blur-[150px] rounded-full animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-red-600/15 blur-[120px] rounded-full animate-pulse delay-700" />
@@ -86,7 +86,7 @@ export default function MainMenu() {
       </div>
 
       <Card className="w-[520px] p-8 relative overflow-hidden border-white/5 bg-zinc-900/60 backdrop-blur-2xl shadow-2xl shadow-black rounded-3xl">
-        {/* Header */}
+        {}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-4">
             <div className="p-2 bg-purple-600 rounded-xl">
@@ -104,7 +104,7 @@ export default function MainMenu() {
           </p>
         </div>
 
-        {/* Difficulty Selection */}
+        {}
         <div className="space-y-4 mb-6">
           <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 text-center">
             Select Difficulty
@@ -147,7 +147,7 @@ export default function MainMenu() {
           </div>
         </div>
 
-        {/* Sound Toggle */}
+        {}
         <div className="flex items-center justify-between p-4 rounded-2xl bg-zinc-800/30 border border-white/5 mb-6">
           <div className="flex items-center gap-3">
             <HugeiconsIcon
@@ -174,7 +174,7 @@ export default function MainMenu() {
           </button>
         </div>
 
-        {/* Start Button */}
+        {}
         <Button
           onClick={handleStart}
           className="w-full h-16 rounded-2xl bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white text-lg font-black tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-purple-900/50 group"
@@ -187,7 +187,7 @@ export default function MainMenu() {
           INITIATE OUTBREAK
         </Button>
 
-        {/* Footer tip */}
+        {}
         <p className="text-center text-[10px] text-zinc-600 mt-4">
           Click a country on the map to start the infection
         </p>

@@ -37,19 +37,19 @@ export function useOwnedTraitIds() {
       const owned: string[] = []
       const { traits } = state
 
-      // Symptoms
+      
       for (const [id, value] of Object.entries(traits.symptoms)) {
         if (value) owned.push(id)
       }
 
-      // Transmissions
+      
       for (const [key, level] of Object.entries(traits.transmissions)) {
         for (let i = 1; i <= level; i++) {
           owned.push(`${key}_${i}`)
         }
       }
 
-      // Abilities
+      
       for (const [key, level] of Object.entries(traits.abilities)) {
         for (let i = 1; i <= level; i++) {
           owned.push(`${key}_${i}`)

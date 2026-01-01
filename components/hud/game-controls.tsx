@@ -48,7 +48,7 @@ export default function GameControls() {
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
       <div className="flex items-center gap-3 p-2 rounded-3xl bg-zinc-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50">
-        {/* DNA Counter */}
+        {}
         <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-purple-600/20 border border-purple-500/30">
           <HugeiconsIcon icon={DnaIcon} size={18} className="text-purple-400" />
           <span className="text-xl font-black text-purple-300 font-mono">
@@ -56,7 +56,7 @@ export default function GameControls() {
           </span>
         </div>
 
-        {/* Speed Controls */}
+        {}
         <div className="flex items-center gap-1 px-2">
           <Button
             size="sm"
@@ -84,10 +84,10 @@ export default function GameControls() {
           </Button>
         </div>
 
-        {/* Divider */}
+        {}
         <div className="w-px h-8 bg-white/10" />
 
-        {/* Evolution Lab Button */}
+        {}
         <Dialog>
           <DialogTrigger asChild>
             <Button className="gap-2 rounded-2xl px-5 h-12 bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold shadow-lg shadow-purple-900/30">
@@ -114,10 +114,10 @@ export default function GameControls() {
           </DialogContent>
         </Dialog>
 
-        {/* Divider */}
+        {}
         <div className="w-px h-8 bg-white/10" />
 
-        {/* More Options */}
+        {}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
