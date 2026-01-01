@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Award01Icon,
@@ -7,39 +7,39 @@ import {
   RotateRight01Icon,
   SkullIcon,
   UserGroupIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
-import { resetGame } from "~/lib/features/game/game-slice";
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Button } from '~/components/ui/button'
+import { Card } from '~/components/ui/card'
+import { resetGame } from '~/libs/features/game/game-slice'
 import {
   selectGameStatus,
   selectGameSummary,
   selectInfectedCountryCount,
-} from "~/lib/features/game/selectors";
-import { useAppDispatch, useAppSelector } from "~/lib/hooks";
+} from '~/libs/features/game/selectors'
+import { useAppDispatch, useAppSelector } from '~/libs/hooks'
 
 function formatNumber(num: number): string {
-  if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`;
-  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
-  if (num >= 1_000) return `${(num / 1_000).toFixed(0)}K`;
-  return num.toString();
+  if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`
+  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`
+  if (num >= 1_000) return `${(num / 1_000).toFixed(0)}K`
+  return num.toString()
 }
 
 export default function GameOverScreen() {
-  const dispatch = useAppDispatch();
-  const gameStatus = useAppSelector(selectGameStatus);
-  const summary = useAppSelector(selectGameSummary);
-  const infectedCountries = useAppSelector(selectInfectedCountryCount);
+  const dispatch = useAppDispatch()
+  const gameStatus = useAppSelector(selectGameStatus)
+  const summary = useAppSelector(selectGameSummary)
+  const infectedCountries = useAppSelector(selectInfectedCountryCount)
 
-  const isWin = gameStatus === "won";
+  const isWin = gameStatus === 'won'
 
   const handlePlayAgain = () => {
-    dispatch(resetGame());
-  };
+    dispatch(resetGame())
+  }
 
-  if (gameStatus !== "won" && gameStatus !== "lost") {
-    return null;
+  if (gameStatus !== 'won' && gameStatus !== 'lost') {
+    return null
   }
 
   return (
@@ -49,8 +49,8 @@ export default function GameOverScreen() {
         <div
           className={`absolute inset-0 ${
             isWin
-              ? "bg-gradient-to-br from-red-600/20 via-transparent to-purple-600/20"
-              : "bg-gradient-to-br from-blue-600/20 via-transparent to-cyan-600/20"
+              ? 'bg-gradient-to-br from-red-600/20 via-transparent to-purple-600/20'
+              : 'bg-gradient-to-br from-blue-600/20 via-transparent to-cyan-600/20'
           }`}
         />
 
@@ -61,8 +61,8 @@ export default function GameOverScreen() {
             <div
               className={`inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 ${
                 isWin
-                  ? "bg-red-600 shadow-lg shadow-red-900/50"
-                  : "bg-blue-600 shadow-lg shadow-blue-900/50"
+                  ? 'bg-red-600 shadow-lg shadow-red-900/50'
+                  : 'bg-blue-600 shadow-lg shadow-blue-900/50'
               }`}
             >
               <HugeiconsIcon
@@ -72,14 +72,14 @@ export default function GameOverScreen() {
               />
             </div>
             <h1 className="text-4xl font-black text-white mb-2">
-              {isWin ? "HUMANITY ERASED" : "CURE DEPLOYED"}
+              {isWin ? 'HUMANITY ERASED' : 'CURE DEPLOYED'}
             </h1>
             <p
-              className={`text-sm font-medium ${isWin ? "text-red-400" : "text-blue-400"}`}
+              className={`text-sm font-medium ${isWin ? 'text-red-400' : 'text-blue-400'}`}
             >
               {isWin
-                ? "Your pathogen has wiped out all human life."
-                : "Scientists found a cure. The disease was eradicated."}
+                ? 'Your pathogen has wiped out all human life.'
+                : 'Scientists found a cure. The disease was eradicated.'}
             </p>
           </div>
 
@@ -169,8 +169,8 @@ export default function GameOverScreen() {
             onClick={handlePlayAgain}
             className={`w-full h-14 rounded-2xl text-lg font-black tracking-wide transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl ${
               isWin
-                ? "bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-500 hover:to-purple-500 shadow-red-900/40"
-                : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 shadow-blue-900/40"
+                ? 'bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-500 hover:to-purple-500 shadow-red-900/40'
+                : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 shadow-blue-900/40'
             }`}
           >
             <HugeiconsIcon
@@ -183,5 +183,5 @@ export default function GameOverScreen() {
         </div>
       </Card>
     </div>
-  );
+  )
 }

@@ -1,27 +1,27 @@
-"use client";
+'use client'
 
 import {
   GlobalIcon,
   UserGroupIcon as PopulationIcon,
   Shield01Icon as ShieldIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Progress } from "~/components/ui/progress";
-import { useAppSelector } from "~/lib/hooks";
-import type { RootState } from "~/lib/store";
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Progress } from '~/components/ui/progress'
+import { useAppSelector } from '~/libs/hooks'
+import type { RootState } from '~/libs/store'
 
 export default function GameStats() {
   const { totalInfected, worldPopulation, cureProgress } = useAppSelector(
-    (state: RootState) => state.events,
-  );
+    (state: RootState) => state.events
+  )
 
-  const infectionPercentage = (totalInfected / worldPopulation) * 100;
+  const infectionPercentage = (totalInfected / worldPopulation) * 100
 
   const formatNumber = (num: number) => {
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-    return num.toString();
-  };
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
+    return num.toString()
+  }
 
   return (
     <div className="fixed top-0 left-0 right-0 p-6 z-50 pointer-events-none">
@@ -58,7 +58,7 @@ export default function GameStats() {
             </div>
             <div className="text-xs font-mono font-black text-purple-400">
               {infectionPercentage < 0.001
-                ? "< 0.001%"
+                ? '< 0.001%'
                 : `${infectionPercentage.toFixed(4)}%`}
             </div>
           </div>
@@ -92,5 +92,5 @@ export default function GameStats() {
         </div>
       </div>
     </div>
-  );
+  )
 }

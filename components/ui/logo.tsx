@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { MonsterIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { MonsterIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 
 export function MapMonsterLogo({ className }: { className?: string }) {
   return (
@@ -26,7 +26,7 @@ export function MapMonsterLogo({ className }: { className?: string }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export function MiniLogo() {
@@ -35,5 +35,5 @@ export function MiniLogo() {
       <HugeiconsIcon icon={MonsterIcon} size={20} className="text-red-500" />
       <div className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 bg-zinc-950 rounded-full" />
     </div>
-  );
+  )
 }

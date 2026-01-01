@@ -9,11 +9,11 @@ export async function GET() {
       biohazard: { cureSpeed: 2.0, infectionRate: 0.7, dnaGain: 0.5 },
     },
     narrativeEntries: [
-      "Patient Zero detected in a remote digital terminal.",
+      'Patient Zero detected in a remote digital terminal.',
       "Global awareness of the 'Chaos' phenomenon is zero.",
-      "Scientists focus on minor glitches while the strain evolves.",
+      'Scientists focus on minor glitches while the strain evolves.',
     ],
-  };
+  }
 
-  return Response.json(worldData);
+  return Response.json(worldData)
 }

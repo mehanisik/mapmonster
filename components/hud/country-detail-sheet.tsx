@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Airplane01Icon,
@@ -7,63 +7,66 @@ import {
   Shield01Icon,
   ShippingTruck01Icon,
   UserGroupIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Badge } from "~/components/ui/badge";
-import { Progress } from "~/components/ui/progress";
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Badge } from '~/components/ui/badge'
+import { Progress } from '~/components/ui/progress'
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "~/components/ui/sheet";
-import { selectCountry } from "~/lib/features/game/game-slice";
-import { selectSelectedCountry } from "~/lib/features/game/selectors";
-import { useAppDispatch, useAppSelector } from "~/lib/hooks";
+} from '~/components/ui/sheet'
+import { selectCountry } from '~/libs/features/game/game-slice'
+import { selectSelectedCountry } from '~/libs/features/game/selectors'
+import { useAppDispatch, useAppSelector } from '~/libs/hooks'
 
 function formatNumber(num: number): string {
-  if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`;
-  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(2)}M`;
-  if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`;
-  return num.toString();
+  if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`
+  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(2)}M`
+  if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`
+  return num.toString()
 }
 
 function getClimateColor(climate: string): string {
   switch (climate) {
-    case "hot":
-      return "text-orange-400 bg-orange-500/10";
-    case "cold":
-      return "text-blue-400 bg-blue-500/10";
-    case "arid":
-      return "text-yellow-400 bg-yellow-500/10";
+    case 'hot':
+      return 'text-orange-400 bg-orange-500/10'
+    case 'cold':
+      return 'text-blue-400 bg-blue-500/10'
+    case 'arid':
+      return 'text-yellow-400 bg-yellow-500/10'
     default:
-      return "text-green-400 bg-green-500/10";
+      return 'text-green-400 bg-green-500/10'
   }
 }
 
 function getWealthColor(wealth: string): string {
   switch (wealth) {
-    case "wealthy":
-      return "text-emerald-400 bg-emerald-500/10";
-    case "developing":
-      return "text-yellow-400 bg-yellow-500/10";
+    case 'wealthy':
+      return 'text-emerald-400 bg-emerald-500/10'
+    case 'developing':
+      return 'text-yellow-400 bg-yellow-500/10'
     default:
-      return "text-red-400 bg-red-500/10";
+      return 'text-red-400 bg-red-500/10'
   }
 }
 
-export default function CountryDetailSheet() {
-  const dispatch = useAppDispatch();
-  const country = useAppSelector(selectSelectedCountry);
+const getTransportStatus = (has: boolean, open: boolean) => {
+  if (!has) return 'None'
+  return open ? 'Open' : 'Closed'
+}
 
-  if (!country) return null;
+export default function CountryDetailSheet() {
+  const dispatch = useAppDispatch()
+  const country = useAppSelector(selectSelectedCountry)
+
+  if (!country) return null
 
   const infectionRate =
-    country.population > 0 ? (country.infected / country.population) * 100 : 0;
-  const _deathRate =
-    country.population > 0 ? (country.dead / country.population) * 100 : 0;
-  const healthyCount = country.population - country.infected - country.dead;
+    country.population > 0 ? (country.infected / country.population) * 100 : 0
+  const healthyCount = country.population - country.infected - country.dead
 
   return (
     <Sheet
@@ -197,45 +200,37 @@ export default function CountryDetailSheet() {
               <div
                 className={`flex flex-col items-center p-3 rounded-xl border transition-all ${
                   country.airportsOpen
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                    : "bg-red-500/10 border-red-500/30 text-red-400"
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    : 'bg-red-500/10 border-red-500/30 text-red-400'
                 }`}
               >
                 <HugeiconsIcon icon={Airplane01Icon} size={20} />
                 <span className="text-[9px] font-bold mt-1 uppercase">
-                  {country.hasAirport
-                    ? country.airportsOpen
-                      ? "Open"
-                      : "Closed"
-                    : "None"}
+                  {getTransportStatus(country.hasAirport, country.airportsOpen)}
                 </span>
               </div>
               <div
                 className={`flex flex-col items-center p-3 rounded-xl border transition-all ${
                   country.seaportsOpen
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                    : "bg-red-500/10 border-red-500/30 text-red-400"
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    : 'bg-red-500/10 border-red-500/30 text-red-400'
                 }`}
               >
                 <HugeiconsIcon icon={ShippingTruck01Icon} size={20} />
                 <span className="text-[9px] font-bold mt-1 uppercase">
-                  {country.hasSeaport
-                    ? country.seaportsOpen
-                      ? "Open"
-                      : "Closed"
-                    : "None"}
+                  {getTransportStatus(country.hasSeaport, country.seaportsOpen)}
                 </span>
               </div>
               <div
                 className={`flex flex-col items-center p-3 rounded-xl border transition-all ${
                   country.bordersOpen
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                    : "bg-red-500/10 border-red-500/30 text-red-400"
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    : 'bg-red-500/10 border-red-500/30 text-red-400'
                 }`}
               >
                 <HugeiconsIcon icon={Road01Icon} size={20} />
                 <span className="text-[9px] font-bold mt-1 uppercase">
-                  {country.bordersOpen ? "Open" : "Closed"}
+                  {country.bordersOpen ? 'Open' : 'Closed'}
                 </span>
               </div>
             </div>
@@ -264,5 +259,5 @@ export default function CountryDetailSheet() {
         </div>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

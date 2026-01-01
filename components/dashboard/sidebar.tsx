@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   ActivityIcon,
@@ -6,24 +6,24 @@ import {
   Shield01Icon as ShieldIcon,
   Target02Icon as TargetIcon,
   ZapIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Badge } from "~/components/ui/badge";
-import { Card, CardDescription, CardHeader } from "~/components/ui/card";
-import { MapMonsterLogo } from "~/components/ui/logo";
-import { Progress } from "~/components/ui/progress";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import type { MapEvent } from "~/lib/features/events/events-slice";
-import { useAppSelector } from "~/lib/hooks";
-import type { RootState } from "~/lib/store";
-import EvolutionLab from "./evolution-lab";
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Badge } from '~/components/ui/badge'
+import { Card, CardDescription, CardHeader } from '~/components/ui/card'
+import { MapMonsterLogo } from '~/components/ui/logo'
+import { Progress } from '~/components/ui/progress'
+import { ScrollArea } from '~/components/ui/scroll-area'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import type { MapEvent } from '~/libs/features/events/events-slice'
+import { useAppSelector } from '~/libs/hooks'
+import type { RootState } from '~/libs/store'
+import EvolutionLab from './evolution-lab'
 
 export default function Sidebar() {
   const { monsters, totalInfected, worldPopulation, cureProgress, dnaPoints } =
-    useAppSelector((state: RootState) => state.events);
+    useAppSelector((state: RootState) => state.events)
 
-  const infectionPercentage = (totalInfected / worldPopulation) * 100;
+  const infectionPercentage = (totalInfected / worldPopulation) * 100
 
   return (
     <Card className="w-80 pointer-events-auto h-[600px] flex flex-col overflow-hidden border-black/5 bg-white/70 backdrop-blur-3xl shadow-2xl">
@@ -114,7 +114,7 @@ export default function Sidebar() {
                           className="text-purple-500"
                         />
                         <span className="text-[10px] font-mono font-bold text-zinc-400">
-                          {m.id.split("-")[1]}
+                          {m.id.split('-')[1]}
                         </span>
                       </div>
                       <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-purple-100 text-purple-600 uppercase tracking-tighter">
@@ -176,5 +176,5 @@ export default function Sidebar() {
         </ScrollArea>
       </Tabs>
     </Card>
-  );
+  )
 }

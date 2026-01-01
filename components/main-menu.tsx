@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   DnaIcon,
@@ -9,77 +9,77 @@ import {
   VolumeHighIcon,
   VolumeMuteIcon,
   ZapIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useState } from "react";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { useState } from 'react'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import { Card } from '~/components/ui/card'
 import {
   resetGame,
   setDifficulty,
   startGame,
-} from "~/lib/features/game/game-slice";
+} from '~/libs/features/game/game-slice'
 import {
   selectDifficulty,
   selectGameStatus,
-} from "~/lib/features/game/selectors";
-import { useAppDispatch, useAppSelector } from "~/lib/hooks";
-import type { Difficulty } from "~/lib/types/game";
+} from '~/libs/features/game/selectors'
+import { useAppDispatch, useAppSelector } from '~/libs/hooks'
+import type { Difficulty } from '~/libs/types/game'
 
 const DIFFICULTY_OPTIONS: Array<{
-  id: Difficulty;
-  name: string;
-  description: string;
-  icon: typeof GlobalIcon;
-  color: string;
+  id: Difficulty
+  name: string
+  description: string
+  icon: typeof GlobalIcon
+  color: string
 }> = [
   {
-    id: "casual",
-    name: "Casual",
-    description: "Slower cure, faster spread. Learn the basics.",
+    id: 'casual',
+    name: 'Casual',
+    description: 'Slower cure, faster spread. Learn the basics.',
     icon: GlobalIcon,
-    color: "text-emerald-500",
+    color: 'text-emerald-500',
   },
   {
-    id: "normal",
-    name: "Normal",
-    description: "Balanced gameplay. Standard challenge.",
+    id: 'normal',
+    name: 'Normal',
+    description: 'Balanced gameplay. Standard challenge.',
     icon: ZapIcon,
-    color: "text-purple-500",
+    color: 'text-purple-500',
   },
   {
-    id: "brutal",
-    name: "Brutal",
-    description: "Faster cure research. World fights back hard.",
+    id: 'brutal',
+    name: 'Brutal',
+    description: 'Faster cure research. World fights back hard.',
     icon: SecurityIcon,
-    color: "text-orange-500",
+    color: 'text-orange-500',
   },
   {
-    id: "mega_brutal",
-    name: "Mega Brutal",
-    description: "Extreme difficulty. The world is prepared.",
+    id: 'mega_brutal',
+    name: 'Mega Brutal',
+    description: 'Extreme difficulty. The world is prepared.',
     icon: SkullIcon,
-    color: "text-red-500",
+    color: 'text-red-500',
   },
-];
+]
 
 export default function MainMenu() {
-  const dispatch = useAppDispatch();
-  const gameStatus = useAppSelector(selectGameStatus);
-  const currentDifficulty = useAppSelector(selectDifficulty);
+  const dispatch = useAppDispatch()
+  const gameStatus = useAppSelector(selectGameStatus)
+  const currentDifficulty = useAppSelector(selectDifficulty)
   const [selectedDifficulty, setSelectedDifficulty] =
-    useState<Difficulty>(currentDifficulty);
-  const [soundEnabled, setSoundEnabled] = useState(true);
+    useState<Difficulty>(currentDifficulty)
+  const [soundEnabled, setSoundEnabled] = useState(true)
 
   const handleStart = () => {
-    dispatch(resetGame());
-    dispatch(setDifficulty(selectedDifficulty));
-    dispatch(startGame());
-  };
+    dispatch(resetGame())
+    dispatch(setDifficulty(selectedDifficulty))
+    dispatch(startGame())
+  }
 
-  if (gameStatus !== "menu") {
-    return null;
+  if (gameStatus !== 'menu') {
+    return null
   }
 
   return (
@@ -123,8 +123,8 @@ export default function MainMenu() {
                 onClick={() => setSelectedDifficulty(d.id)}
                 className={`flex flex-col items-start p-4 rounded-2xl border transition-all duration-300 text-left ${
                   selectedDifficulty === d.id
-                    ? "bg-zinc-800 border-white/20 shadow-xl scale-[1.02]"
-                    : "bg-zinc-900/50 border-white/5 hover:border-white/10 opacity-60 hover:opacity-100"
+                    ? 'bg-zinc-800 border-white/20 shadow-xl scale-[1.02]'
+                    : 'bg-zinc-900/50 border-white/5 hover:border-white/10 opacity-60 hover:opacity-100'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
@@ -132,14 +132,14 @@ export default function MainMenu() {
                     icon={d.icon}
                     size={16}
                     className={
-                      selectedDifficulty === d.id ? d.color : "text-zinc-500"
+                      selectedDifficulty === d.id ? d.color : 'text-zinc-500'
                     }
                   />
                   <span
                     className={`text-sm font-bold ${
                       selectedDifficulty === d.id
-                        ? "text-white"
-                        : "text-zinc-400"
+                        ? 'text-white'
+                        : 'text-zinc-400'
                     }`}
                   >
                     {d.name}
@@ -169,12 +169,12 @@ export default function MainMenu() {
             type="button"
             onClick={() => setSoundEnabled(!soundEnabled)}
             className={`w-12 h-6 rounded-full transition-all duration-300 relative ${
-              soundEnabled ? "bg-purple-600" : "bg-zinc-700"
+              soundEnabled ? 'bg-purple-600' : 'bg-zinc-700'
             }`}
           >
             <div
               className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300 ${
-                soundEnabled ? "right-1" : "left-1"
+                soundEnabled ? 'right-1' : 'left-1'
               }`}
             />
           </button>
@@ -199,5 +199,5 @@ export default function MainMenu() {
         </p>
       </Card>
     </div>
-  );
+  )
 }

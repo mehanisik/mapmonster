@@ -1,43 +1,43 @@
-"use client";
+'use client'
 
-import { Card } from "~/components/ui/card";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { selectRecentEvents } from "~/lib/features/game/selectors";
-import { useAppSelector } from "~/lib/hooks";
-import type { WorldEvent } from "~/lib/types/game";
+import { Card } from '~/components/ui/card'
+import { ScrollArea } from '~/components/ui/scroll-area'
+import { selectRecentEvents } from '~/libs/features/game/selectors'
+import { useAppSelector } from '~/libs/hooks'
+import type { WorldEvent } from '~/libs/types/game'
 
-function getEventIcon(type: WorldEvent["type"]): string {
+function getEventIcon(type: WorldEvent['type']): string {
   switch (type) {
-    case "infection":
-      return "🦠";
-    case "death":
-      return "💀";
-    case "cure":
-      return "💉";
-    case "response":
-      return "🚨";
-    case "mutation":
-      return "🧬";
-    case "milestone":
-      return "🎯";
+    case 'infection':
+      return '🦠'
+    case 'death':
+      return '💀'
+    case 'cure':
+      return '💉'
+    case 'response':
+      return '🚨'
+    case 'mutation':
+      return '🧬'
+    case 'milestone':
+      return '🎯'
     default:
-      return "📰";
+      return '📰'
   }
 }
 
-function getEventColor(severity: WorldEvent["severity"]): string {
+function getEventColor(severity: WorldEvent['severity']): string {
   switch (severity) {
-    case "critical":
-      return "text-red-400 bg-red-500/10 border-red-500/20";
-    case "warning":
-      return "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
+    case 'critical':
+      return 'text-red-400 bg-red-500/10 border-red-500/20'
+    case 'warning':
+      return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20'
     default:
-      return "text-zinc-400 bg-zinc-800/50 border-zinc-700/30";
+      return 'text-zinc-400 bg-zinc-800/50 border-zinc-700/30'
   }
 }
 
 export default function NewsFeed() {
-  const events = useAppSelector(selectRecentEvents);
+  const events = useAppSelector(selectRecentEvents)
 
   if (events.length === 0) {
     return (
@@ -49,7 +49,7 @@ export default function NewsFeed() {
           </span>
         </div>
       </Card>
-    );
+    )
   }
 
   return (
@@ -96,5 +96,5 @@ export default function NewsFeed() {
         </div>
       </ScrollArea>
     </Card>
-  );
+  )
 }

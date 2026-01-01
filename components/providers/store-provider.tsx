@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { Provider } from "react-redux";
-import { store } from "~/lib/store";
+import { Provider } from 'react-redux'
+import { store } from '~/libs/store'
 
 export default function StoreProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
-  return <Provider store={store}>{children}</Provider>;
+  return <Provider store={store}>{children}</Provider>
 }

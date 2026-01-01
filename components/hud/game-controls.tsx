@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   DnaIcon,
@@ -7,47 +7,47 @@ import {
   MoreVerticalIcon,
   PlayIcon,
   RotateRight01Icon as RotateIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Button } from "~/components/ui/button";
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Button } from '~/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/ui/dialog";
+} from '~/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import { resetGame, setGameSpeed } from "~/lib/features/game/game-slice";
+} from '~/components/ui/dropdown-menu'
+import { resetGame, setGameSpeed } from '~/libs/features/game/game-slice'
 import {
   selectDnaPoints,
   selectGameState,
   selectGameStatus,
-} from "~/lib/features/game/selectors";
-import { useAppDispatch, useAppSelector } from "~/lib/hooks";
-import EvolutionLab from "../dashboard/evolution-lab";
+} from '~/libs/features/game/selectors'
+import { useAppDispatch, useAppSelector } from '~/libs/hooks'
+import EvolutionLab from '../dashboard/evolution-lab'
 
 export default function GameControls() {
-  const dispatch = useAppDispatch();
-  const dnaPoints = useAppSelector(selectDnaPoints);
-  const gameState = useAppSelector(selectGameState);
-  const gameStatus = useAppSelector(selectGameStatus);
+  const dispatch = useAppDispatch()
+  const dnaPoints = useAppSelector(selectDnaPoints)
+  const gameState = useAppSelector(selectGameState)
+  const gameStatus = useAppSelector(selectGameStatus)
 
   const handleSpeedChange = (speed: number) => {
-    dispatch(setGameSpeed(speed));
-  };
+    dispatch(setGameSpeed(speed))
+  }
 
   const handleReset = () => {
-    dispatch(resetGame());
-  };
+    dispatch(resetGame())
+  }
 
-  if (gameStatus !== "playing") {
-    return null;
+  if (gameStatus !== 'playing') {
+    return null
   }
 
   return (
@@ -65,7 +65,7 @@ export default function GameControls() {
         <div className="flex items-center gap-1 px-2">
           <Button
             size="sm"
-            variant={gameState.gameSpeed === 1 ? "secondary" : "ghost"}
+            variant={gameState.gameSpeed === 1 ? 'secondary' : 'ghost'}
             onClick={() => handleSpeedChange(1)}
             className="rounded-xl h-10 w-10 p-0"
           >
@@ -73,7 +73,7 @@ export default function GameControls() {
           </Button>
           <Button
             size="sm"
-            variant={gameState.gameSpeed === 2 ? "secondary" : "ghost"}
+            variant={gameState.gameSpeed === 2 ? 'secondary' : 'ghost'}
             onClick={() => handleSpeedChange(2)}
             className="rounded-xl h-10 w-10 p-0"
           >
@@ -81,7 +81,7 @@ export default function GameControls() {
           </Button>
           <Button
             size="sm"
-            variant={gameState.gameSpeed === 3 ? "secondary" : "ghost"}
+            variant={gameState.gameSpeed === 3 ? 'secondary' : 'ghost'}
             onClick={() => handleSpeedChange(3)}
             className="rounded-xl h-10 w-10 p-0"
           >
@@ -148,5 +148,5 @@ export default function GameControls() {
         </DropdownMenu>
       </div>
     </div>
-  );
+  )
 }

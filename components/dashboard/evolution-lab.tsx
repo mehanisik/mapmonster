@@ -1,36 +1,36 @@
-"use client";
+'use client'
 
 import {
   DnaIcon,
   Shield01Icon as ShieldIcon,
   Bug01Icon as VirusIcon,
   WifiIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import { ScrollArea } from '~/components/ui/scroll-area'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import {
   ABILITIES,
   canPurchaseTrait,
   SYMPTOMS,
   TRANSMISSIONS,
-} from "~/lib/data/traits-config";
-import { purchaseTrait } from "~/lib/features/game/game-slice";
+} from '~/libs/data/traits-config'
+import { purchaseTrait } from '~/libs/features/game/game-slice'
 import {
   selectDnaPoints,
   selectOwnedTraitIds,
-} from "~/lib/features/game/selectors";
-import { useAppDispatch, useAppSelector } from "~/lib/hooks";
-import type { TraitConfig } from "~/lib/types/game";
+} from '~/libs/features/game/selectors'
+import { useAppDispatch, useAppSelector } from '~/libs/hooks'
+import type { TraitConfig } from '~/libs/types/game'
 
 interface TraitCardProps {
-  trait: TraitConfig;
-  isOwned: boolean;
-  canAfford: boolean;
-  canPurchase: boolean;
-  onPurchase: () => void;
+  trait: TraitConfig
+  isOwned: boolean
+  canAfford: boolean
+  canPurchase: boolean
+  onPurchase: () => void
 }
 
 function TraitCard({
@@ -40,15 +40,24 @@ function TraitCard({
   canPurchase,
   onPurchase,
 }: TraitCardProps) {
+  let cardStyles = 'bg-zinc-900/40 border-white/5 opacity-50'
+  if (isOwned) {
+    cardStyles = 'bg-emerald-500/10 border-emerald-500/30'
+  } else if (canPurchase) {
+    cardStyles =
+      'bg-zinc-900/80 border-white/10 hover:border-purple-500/50 hover:shadow-lg'
+  }
+
+  let buttonLabel = 'Need DNA'
+  if (canPurchase) {
+    buttonLabel = 'Evolve'
+  } else if (canAfford) {
+    buttonLabel = 'Locked'
+  }
+
   return (
     <div
-      className={`group p-4 rounded-2xl border transition-all duration-300 ${
-        isOwned
-          ? "bg-emerald-500/10 border-emerald-500/30"
-          : canPurchase
-            ? "bg-zinc-900/80 border-white/10 hover:border-purple-500/50 hover:shadow-lg"
-            : "bg-zinc-900/40 border-white/5 opacity-50"
-      }`}
+      className={`group p-4 rounded-2xl border transition-all duration-300 ${cardStyles}`}
     >
       <div className="flex justify-between items-start mb-2">
         <div className="flex-1">
@@ -62,8 +71,8 @@ function TraitCard({
             variant="outline"
             className={`ml-2 shrink-0 text-[10px] font-mono ${
               canAfford
-                ? "border-purple-500/50 text-purple-400"
-                : "border-zinc-700 text-zinc-600"
+                ? 'border-purple-500/50 text-purple-400'
+                : 'border-zinc-700 text-zinc-600'
             }`}
           >
             {trait.cost} DNA
@@ -98,7 +107,7 @@ function TraitCard({
       {/* Prerequisites */}
       {trait.prerequisites.length > 0 && !isOwned && (
         <div className="mt-2 text-[9px] text-zinc-600">
-          Requires: {trait.prerequisites.join(", ")}
+          Requires: {trait.prerequisites.join(', ')}
         </div>
       )}
 
@@ -110,31 +119,31 @@ function TraitCard({
           onClick={onPurchase}
           className={`w-full mt-3 h-8 text-[10px] font-bold rounded-xl transition-all ${
             canPurchase
-              ? "bg-purple-600 hover:bg-purple-500 text-white"
-              : "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+              ? 'bg-purple-600 hover:bg-purple-500 text-white'
+              : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
           }`}
         >
-          {canPurchase ? "Evolve" : canAfford ? "Locked" : "Need DNA"}
+          {buttonLabel}
         </Button>
       )}
     </div>
-  );
+  )
 }
 
 export default function EvolutionLab() {
-  const dispatch = useAppDispatch();
-  const dnaPoints = useAppSelector(selectDnaPoints);
-  const ownedTraitIds = useAppSelector(selectOwnedTraitIds);
+  const dispatch = useAppDispatch()
+  const dnaPoints = useAppSelector(selectDnaPoints)
+  const ownedTraitIds = useAppSelector(selectOwnedTraitIds)
 
   const handlePurchase = (traitId: string) => {
-    dispatch(purchaseTrait(traitId));
-  };
+    dispatch(purchaseTrait(traitId))
+  }
 
   const renderTraitList = (traits: Record<string, TraitConfig>) => {
     return Object.values(traits).map((trait) => {
-      const isOwned = ownedTraitIds.includes(trait.id);
-      const canAfford = dnaPoints >= trait.cost;
-      const canPurchase = canPurchaseTrait(trait.id, ownedTraitIds, dnaPoints);
+      const isOwned = ownedTraitIds.includes(trait.id)
+      const canAfford = dnaPoints >= trait.cost
+      const canPurchase = canPurchaseTrait(trait.id, ownedTraitIds, dnaPoints)
 
       return (
         <TraitCard
@@ -145,9 +154,9 @@ export default function EvolutionLab() {
           canPurchase={canPurchase}
           onPurchase={() => handlePurchase(trait.id)}
         />
-      );
-    });
-  };
+      )
+    })
+  }
 
   return (
     <div className="space-y-4">
@@ -217,5 +226,5 @@ export default function EvolutionLab() {
         </ScrollArea>
       </Tabs>
     </div>
-  );
+  )
 }

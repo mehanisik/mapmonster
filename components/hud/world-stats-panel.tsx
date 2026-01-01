@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   DnaIcon,
@@ -6,29 +6,29 @@ import {
   Shield01Icon as ShieldIcon,
   SkullIcon,
   UserGroupIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Progress } from "~/components/ui/progress";
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Progress } from '~/components/ui/progress'
 import {
   selectCure,
   selectGameSummary,
   selectInfectedCountryCount,
-} from "~/lib/features/game/selectors";
-import { useAppSelector } from "~/lib/hooks";
+} from '~/libs/features/game/selectors'
+import { useAppSelector } from '~/libs/hooks'
 
 function formatNumber(num: number): string {
-  if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`;
-  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(2)}M`;
-  if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`;
-  return num.toString();
+  if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`
+  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(2)}M`
+  if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`
+  return num.toString()
 }
 
 export default function WorldStatsPanel() {
-  const summary = useAppSelector(selectGameSummary);
-  const infectedCountries = useAppSelector(selectInfectedCountryCount);
-  const cure = useAppSelector(selectCure);
+  const summary = useAppSelector(selectGameSummary)
+  const infectedCountries = useAppSelector(selectInfectedCountryCount)
+  const cure = useAppSelector(selectCure)
 
-  const infectionPercentage = (summary.infected / summary.population) * 100;
+  const infectionPercentage = (summary.infected / summary.population) * 100
 
   return (
     <div className="fixed top-0 left-0 right-0 p-4 z-50 pointer-events-none">
@@ -84,7 +84,7 @@ export default function WorldStatsPanel() {
               </span>
               <span className="text-xs font-mono font-bold text-red-400">
                 {infectionPercentage < 0.001
-                  ? "<0.001%"
+                  ? '<0.001%'
                   : `${infectionPercentage.toFixed(3)}%`}
               </span>
             </div>
@@ -115,7 +115,7 @@ export default function WorldStatsPanel() {
             value={cure.progress}
             className="h-1.5 bg-white/5"
             indicatorClassName={`${
-              cure.isDetected ? "bg-blue-500" : "bg-zinc-700"
+              cure.isDetected ? 'bg-blue-500' : 'bg-zinc-700'
             } shadow-[0_0_10px_rgba(59,130,246,0.3)]`}
           />
           {!cure.isDetected && (
@@ -168,5 +168,5 @@ export default function WorldStatsPanel() {
         </div>
       </div>
     </div>
-  );
+  )
 }
