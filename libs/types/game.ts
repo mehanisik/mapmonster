@@ -24,6 +24,7 @@ export interface Country {
   lng: number
   climate: Climate
   isIsland: boolean
+  geometry?: any // GeoJSON Geometry for borders
 
   // Infrastructure
   wealth: WealthLevel
@@ -156,6 +157,7 @@ export interface GameState {
   // Events & UI
   events: WorldEvent[]
   selectedCountryId: string | null
+  isLoadingData: boolean
 
   // Map Interactions (DNA bubbles)
   dnaAnomalies: Array<{

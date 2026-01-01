@@ -1,6 +1,7 @@
 'use client'
 
 import Feature from 'ol/Feature'
+import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
 import HeatmapLayer from 'ol/layer/Heatmap'
 import TileLayer from 'ol/layer/Tile'
@@ -11,7 +12,7 @@ import VectorSource from 'ol/source/Vector'
 import XYZ from 'ol/source/XYZ'
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style'
 import View from 'ol/View'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useGameStore } from '~/libs/store/use-game-store'
 import 'ol/ol.css'
 
@@ -28,8 +29,11 @@ export default function MapComponent() {
   const mapElement = useRef<HTMLDivElement>(null)
   const mapRef = useRef<OlMap | null>(null)
   const countrySourceRef = useRef<VectorSource | null>(null)
+  const borderSourceRef = useRef<VectorSource | null>(null)
   const dnaSourceRef = useRef<VectorSource | null>(null)
   const heatmapLayerRef = useRef<HeatmapLayer | null>(null)
+
+  const geojsonFormat = useMemo(() => new GeoJSON(), [])
 
   // Refs for reactive state access in callbacks
   const countriesRef = useRef(countries)
@@ -74,6 +78,7 @@ export default function MapComponent() {
     if (!mapElement.current || mapRef.current) return
 
     countrySourceRef.current = new VectorSource()
+    borderSourceRef.current = new VectorSource()
     dnaSourceRef.current = new VectorSource()
 
     // DNA anomaly layer
@@ -95,6 +100,33 @@ export default function MapComponent() {
       zIndex: 100,
     })
 
+    // Border layer for country polygons
+    const borderLayer = new VectorLayer({
+      source: borderSourceRef.current,
+      style: (feature) => {
+        const infected = feature.get('infected') || 0
+        const population = feature.get('population') || 1
+        const infectionRate = infected / population
+
+        let fillColor = 'rgba(255, 255, 255, 0.02)'
+        let strokeColor = 'rgba(255, 255, 255, 0.1)'
+        let strokeWidth = 1
+
+        if (infectionRate > 0) {
+          const intensity = Math.min(1, infectionRate * 5)
+          fillColor = `rgba(239, 44, 44, ${0.1 + intensity * 0.4})`
+          strokeColor = `rgba(239, 44, 44, ${0.3 + intensity * 0.5})`
+          strokeWidth = 1 + intensity
+        }
+
+        return new Style({
+          fill: new Fill({ color: fillColor }),
+          stroke: new Stroke({ color: strokeColor, width: strokeWidth }),
+        })
+      },
+      zIndex: 5,
+    })
+
     // Heatmap for infection visualization
     heatmapLayerRef.current = new HeatmapLayer({
       source: countrySourceRef.current,
@@ -111,7 +143,7 @@ export default function MapComponent() {
       weight: (feature) => {
         const infected = feature.get('infected') || 0
         const population = feature.get('population') || 1
-        return Math.min(1, (infected / population) * 20)
+        return Math.min(1, (infected / population) * 10)
       },
       zIndex: 10,
     })
@@ -125,35 +157,28 @@ export default function MapComponent() {
         const infectionRate = infected / population
 
         // Color based on infection rate
-        let color = 'rgba(100, 100, 100, 0.6)' // Uninfected
+        let color = 'rgba(100, 100, 100, 0.4)' // Uninfected
         if (infectionRate > 0) {
-          const intensity = Math.min(1, infectionRate * 10)
-          const r = Math.floor(239 * intensity + 100 * (1 - intensity))
-          const g = Math.floor(68 * intensity + 100 * (1 - intensity))
-          const b = Math.floor(68 * intensity + 100 * (1 - intensity))
-          color = `rgba(${r}, ${g}, ${b}, 0.8)`
+          color = 'rgba(239, 68, 68, 0.9)'
         }
 
         return new Style({
           image: new CircleStyle({
-            radius: infected > 0 ? 8 + Math.min(10, infectionRate * 50) : 6,
+            radius: infected > 0 ? 5 + Math.min(10, infectionRate * 50) : 3,
             fill: new Fill({ color }),
             stroke: new Stroke({
-              color:
-                infected > 0
-                  ? 'rgba(255,255,255,0.8)'
-                  : 'rgba(255,255,255,0.3)',
-              width: infected > 0 ? 2 : 1,
+              color: 'rgba(255,255,255,0.4)',
+              width: 1,
             }),
           }),
           text:
             infected > 0
               ? new Text({
                   text: feature.get('name'),
-                  font: 'bold 10px sans-serif',
+                  font: 'bold 10px Inter, sans-serif',
                   fill: new Fill({ color: '#fff' }),
                   stroke: new Stroke({ color: '#000', width: 2 }),
-                  offsetY: -18,
+                  offsetY: -12,
                 })
               : undefined,
         })
@@ -171,6 +196,7 @@ export default function MapComponent() {
               '© <a href="https://carto.com/attributions">CARTO</a>',
           }),
         }),
+        borderLayer,
         heatmapLayerRef.current,
         countryLayer,
         dnaLayer,
@@ -204,22 +230,63 @@ export default function MapComponent() {
   // Update country features
   useEffect(() => {
     if (!countrySourceRef.current) return
+    if (!borderSourceRef.current) return
 
-    const features = countries.map((country) => {
-      const f = new Feature({
+    const markerFeatures: Feature[] = []
+    const borderFeatures: Feature[] = []
+
+    for (const country of countries) {
+      // 1. Marker feature (Point)
+      const marker = new Feature({
         geometry: new Point(fromLonLat([country.lng, country.lat])),
         name: country.name,
         infected: country.infected,
         population: country.population,
         dead: country.dead,
       })
-      f.setId(`country-${country.id}`)
-      return f
-    })
+      marker.setId(`country-${country.id}`)
+      markerFeatures.push(marker)
+
+      // 2. Border feature (Polygon from GeoJSON)
+      if (country.geometry) {
+        try {
+          const border = geojsonFormat.readFeature(
+            {
+              type: 'Feature',
+              geometry: country.geometry,
+              properties: {
+                id: country.id,
+                name: country.name,
+                infected: country.infected,
+                population: country.population,
+                dead: country.dead,
+              },
+            },
+            {
+              dataProjection: 'EPSG:4326',
+              featureProjection: 'EPSG:3857',
+            }
+          )
+          
+          if (border instanceof Feature) {
+            border.setId(`border-${country.id}`)
+            borderFeatures.push(border)
+          } else if (Array.isArray(border)) {
+            border[0].setId(`border-${country.id}`)
+            borderFeatures.push(border[0])
+          }
+        } catch (e) {
+          console.error(`Failed to parse geometry for ${country.name}`, e)
+        }
+      }
+    }
 
     countrySourceRef.current.clear()
-    countrySourceRef.current.addFeatures(features)
-  }, [countries])
+    countrySourceRef.current.addFeatures(markerFeatures)
+
+    borderSourceRef.current.clear()
+    borderSourceRef.current.addFeatures(borderFeatures)
+  }, [countries, geojsonFormat])
 
   // Update DNA anomaly features
   useEffect(() => {

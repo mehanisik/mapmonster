@@ -1,7 +1,5 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import { COUNTRIES } from '~/libs/data/countries'
-import { TRANSPORT_ROUTES } from '~/libs/data/routes'
 import {
   calculateDiseaseStats,
   canPurchaseTrait,
@@ -12,6 +10,7 @@ import type {
   Difficulty,
   DiseaseTraits,
   GameState,
+  TransportRoute,
   WorldEvent,
 } from '~/libs/types/game'
 
@@ -62,8 +61,8 @@ const initialState: GameState = {
   dnaPoints: 0,
   traits: initialTraits,
   stats: { infectivity: 0, severity: 0, lethality: 0 },
-  countries: COUNTRIES.map((c) => ({ ...c })),
-  routes: TRANSPORT_ROUTES,
+  countries: [],
+  routes: [],
   cure: {
     progress: 0,
     isDetected: false,
@@ -72,6 +71,7 @@ const initialState: GameState = {
   },
   events: [],
   selectedCountryId: null,
+  isLoadingData: false,
   dnaAnomalies: [],
 }
 
@@ -97,6 +97,7 @@ interface GameActions {
     severity?: WorldEvent['severity']
   ) => void
   infectStartingCountry: (countryId: string) => void
+  initializeGame: () => Promise<void>
 }
 
 export type GameStore = GameState & GameActions
@@ -160,11 +161,49 @@ export const useGameStore = create<GameStore>()(
 
     resetGame: () => {
       set((state) => {
+        const savedCountries = state.countries.map(c => ({
+          ...c,
+          infected: 0,
+          dead: 0,
+          bordersOpen: true,
+          airportsOpen: true,
+          seaportsOpen: true,
+          awareness: 0,
+          researchContribution: 0
+        }))
+        const savedRoutes = state.routes
+
         Object.assign(state, {
           ...initialState,
-          countries: COUNTRIES.map((c) => ({ ...c })),
+          countries: savedCountries,
+          routes: savedRoutes,
+          isLoadingData: false
         })
       })
+    },
+
+    initializeGame: async () => {
+      set((state) => {
+        state.isLoadingData = true
+      })
+      try {
+        const response = await fetch('/api/countries')
+        if (!response.ok) throw new Error('Failed to load country data')
+        const {
+          countries,
+          routes,
+        }: { countries: Country[]; routes: TransportRoute[] } = await response.json()
+        set((state) => {
+          state.countries = countries
+          state.routes = routes
+          state.isLoadingData = false
+        })
+      } catch (error) {
+        console.error('Failed to initialize game data:', error)
+        set((state) => {
+          state.isLoadingData = false
+        })
+      }
     },
 
     setDifficulty: (difficulty) => {
