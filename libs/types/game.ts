@@ -132,7 +132,7 @@ export interface WorldEvent {
 // ============================================================================
 
 export type Difficulty = 'casual' | 'normal' | 'brutal' | 'mega_brutal'
-export type GameStatus = 'menu' | 'playing' | 'won' | 'lost'
+export type GameStatus = 'menu' | 'selecting_start' | 'playing' | 'won' | 'lost'
 
 export interface GameState {
   // Core State

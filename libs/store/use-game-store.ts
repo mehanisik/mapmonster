@@ -96,6 +96,7 @@ interface GameActions {
     countryId?: string,
     severity?: WorldEvent['severity']
   ) => void
+  infectStartingCountry: (countryId: string) => void
 }
 
 export type GameStore = GameState & GameActions
@@ -105,7 +106,7 @@ export type GameStore = GameState & GameActions
 // ============================================================================
 
 export const useGameStore = create<GameStore>()(
-  immer((set, get) => ({
+  immer((set) => ({
     ...initialState,
 
     addEvent: (type, message, countryId, severity = 'info') => {
@@ -127,11 +128,34 @@ export const useGameStore = create<GameStore>()(
 
     startGame: () => {
       set((state) => {
-        state.status = 'playing'
+        state.status = 'selecting_start'
         state.tickCount = 0
         state.dnaPoints = 5
       })
-      get().addEvent('milestone', 'Patient Zero has been infected.', 'warning')
+    },
+
+    infectStartingCountry: (countryId) => {
+      set((state) => {
+        if (state.status !== 'selecting_start') return
+
+        const country = state.countries.find((c) => c.id === countryId)
+        if (country) {
+          country.infected = 1
+          state.status = 'playing'
+          state.gameSpeed = 1
+
+          const message = `Outbreak initiated in ${country.name}. Target confirmed.`
+          const event: WorldEvent = {
+            id: `event-${Date.now()}`,
+            timestamp: 0,
+            type: 'milestone',
+            message,
+            severity: 'warning',
+            countryId: country.id,
+          }
+          state.events.unshift(event)
+        }
+      })
     },
 
     resetGame: () => {
@@ -285,121 +309,153 @@ export const useGameStore = create<GameStore>()(
         state.tickCount += 1
 
         const diffMult = {
-          casual: { infection: 1.3, cure: 0.5, dna: 1.5 },
+          casual: { infection: 1.5, cure: 0.5, dna: 1.5 },
           normal: { infection: 1.0, cure: 1.0, dna: 1.0 },
-          brutal: { infection: 0.8, cure: 1.5, dna: 0.7 },
-          mega_brutal: { infection: 0.6, cure: 2.0, dna: 0.5 },
+          brutal: { infection: 0.8, cure: 1.5, dna: 0.8 },
+          mega_brutal: { infection: 0.7, cure: 2.0, dna: 0.6 },
         }[state.difficulty]
 
         let totalInfected = 0
         let totalHealthy = 0
+        let totalDead = 0
 
         // Simulation logic
         for (const country of state.countries) {
-          if (country.infected === 0) continue
+          const currentlyInfected = country.infected
+          const currentlyDead = country.dead
+          const healthy = country.population - currentlyInfected - currentlyDead
 
-          const healthy = country.population - country.infected - country.dead
-          if (healthy <= 0) continue
+          if (currentlyInfected > 0 && healthy > 0) {
+            // 1. INFECTION SPREAD (Logistic Growth Model)
+            const climateMult = getClimateMultiplier(country, state.traits)
+            const wealthMult = getWealthMultiplier(country, state.traits)
+            const healthcarePenalty = 1 - (country.healthcare / 100) * 0.8 // Max 80% reduction
 
-          // Infection spread within country
-          const climateMult = getClimateMultiplier(country, state.traits)
-          const wealthMult = getWealthMultiplier(country, state.traits)
-          const healthcarePenalty = 1 - country.healthcare / 200
+            // Base rate scales with infectivity stats
+            const baseInfectivity = 0.05 + state.stats.infectivity * 0.02
+            const spreadRate =
+              baseInfectivity *
+              climateMult *
+              wealthMult *
+              healthcarePenalty *
+              diffMult.infection
 
-          const baseSpreadRate = 0.001 + state.stats.infectivity * 0.0005
-          const spreadRate =
-            baseSpreadRate *
-            climateMult *
-            wealthMult *
-            healthcarePenalty *
-            diffMult.infection
+            // Logistic growth: dI/dt = r * I * (1 - I/N)
+            const infectionRatio = currentlyInfected / country.population
+            const newInfections = Math.max(
+              1,
+              Math.floor(currentlyInfected * spreadRate * (1 - infectionRatio))
+            )
 
-          const infectionRate = country.infected / country.population
-          const newInfections = Math.floor(
-            country.infected * spreadRate * (1 - infectionRate) * 100
-          )
-
-          country.infected = Math.min(
-            country.population - country.dead,
-            country.infected + Math.max(1, newInfections)
-          )
-
-          // Deaths
-          if (state.stats.lethality > 0) {
-            const deathRate = state.stats.lethality * 0.0001 * healthcarePenalty
-            const newDeaths = Math.floor(country.infected * deathRate)
-            country.dead += newDeaths
-            country.infected = Math.max(0, country.infected - newDeaths)
+            country.infected = Math.min(
+              country.population - country.dead,
+              country.infected + newInfections
+            )
           }
 
-          // Awareness and Government Response
-          const visibilityFactor = state.stats.severity * infectionRate * 10
+          // 2. DEATHS
+          if (country.infected > 0 && state.stats.lethality > 0) {
+            const baseLethality = state.stats.lethality * 0.001
+            const healthcarePenalty = 1 - (country.healthcare / 100) * 0.5
+            const deathRate = baseLethality * healthcarePenalty
+
+            const newDeaths = Math.max(
+              0,
+              Math.min(
+                country.infected,
+                Math.floor(country.infected * deathRate)
+              )
+            )
+
+            country.dead += newDeaths
+            country.infected -= newDeaths
+          }
+
+          // 3. AWARENESS & RESPONSE
+          // Awareness grows based on severity and how much of the population is infected/dead
+          const impactRatio =
+            (country.infected + country.dead) / country.population
+          const visibilityFactor = state.stats.severity * 0.1 + impactRatio * 50
           country.awareness = Math.min(
             100,
-            country.awareness + visibilityFactor * 0.1
+            country.awareness + visibilityFactor * 0.05
           )
 
-          if (country.awareness > 20 && Math.random() < 0.01) {
-            if (country.bordersOpen && country.awareness > 40) {
-              country.bordersOpen = false
-              state.events.unshift({
-                id: `evt-${Date.now()}-${Math.random()}`,
-                timestamp: state.tickCount,
-                type: 'response',
-                message: `${country.name} closes land borders.`,
-                severity: 'warning',
-                countryId: country.id,
-              })
-            }
+          // Border closures based on awareness
+          if (
+            country.awareness > 30 &&
+            country.bordersOpen &&
+            Math.random() < 0.05
+          ) {
+            country.bordersOpen = false
+            state.events.unshift({
+              id: `evt-${Date.now()}-${Math.random()}`,
+              timestamp: state.tickCount,
+              type: 'response',
+              message: `${country.name} closes land borders.`,
+              severity: 'warning',
+              countryId: country.id,
+            })
           }
-          if (country.awareness > 50 && Math.random() < 0.005) {
-            if (country.airportsOpen) {
-              country.airportsOpen = false
-              state.events.unshift({
-                id: `evt-${Date.now()}-${Math.random()}`,
-                timestamp: state.tickCount,
-                type: 'response',
-                message: `${country.name} closes airports.`,
-                severity: 'warning',
-                countryId: country.id,
-              })
-            }
+          if (
+            country.awareness > 50 &&
+            country.airportsOpen &&
+            Math.random() < 0.03
+          ) {
+            country.airportsOpen = false
+            state.events.unshift({
+              id: `evt-${Date.now()}-${Math.random()}`,
+              timestamp: state.tickCount,
+              type: 'response',
+              message: `${country.name} suspends all air travel.`,
+              severity: 'warning',
+              countryId: country.id,
+            })
           }
-          if (country.awareness > 70 && Math.random() < 0.003) {
-            if (country.seaportsOpen) {
-              country.seaportsOpen = false
-              state.events.unshift({
-                id: `evt-${Date.now()}-${Math.random()}`,
-                timestamp: state.tickCount,
-                type: 'response',
-                message: `${country.name} closes seaports.`,
-                severity: 'critical',
-                countryId: country.id,
-              })
-            }
+          if (
+            country.awareness > 70 &&
+            country.seaportsOpen &&
+            Math.random() < 0.02
+          ) {
+            country.seaportsOpen = false
+            state.events.unshift({
+              id: `evt-${Date.now()}-${Math.random()}`,
+              timestamp: state.tickCount,
+              type: 'response',
+              message: `${country.name} shuts down seaports.`,
+              severity: 'critical',
+              countryId: country.id,
+            })
           }
 
-          // Research contribution
-          if (country.awareness > 30) {
-            const wealthBonus =
-              { wealthy: 2, developing: 1, poor: 0.5 }[country.wealth] || 0.5
-            country.researchContribution =
-              country.healthcare * wealthBonus * 0.01
+          // 4. RESEARCH CONTRIBUTION
+          // Countries only contribute significantly if they are aware and not in total chaos
+          if (country.awareness > 20) {
+            const wealthFactor =
+              { wealthy: 2.5, developing: 1.0, poor: 0.3 }[country.wealth] ||
+              1.0
+            const chaosFactor = 1 - (country.dead / country.population) * 2 // Research stops as deaths rise
+            country.researchContribution = Math.max(
+              0,
+              country.healthcare * wealthFactor * chaosFactor * 0.005
+            )
           }
 
           totalInfected += country.infected
           totalHealthy += country.population - country.infected - country.dead
+          totalDead += country.dead
         }
 
-        // Cross-border transmission
+        // 5. CROSS-BORDER TRANSMISSION (Simulated more logically)
         if (state.tickCount % 5 === 0) {
           for (const route of state.routes) {
             const from = state.countries.find((c) => c.id === route.from)
             const to = state.countries.find((c) => c.id === route.to)
 
-            if (!(from && to) || from.infected === 0 || to.infected > 0)
+            if (!(from && to) || from.infected <= 10 || to.infected > 0)
               continue
 
+            // Check if ports are open
             if (route.type === 'air' && !(from.airportsOpen && to.airportsOpen))
               continue
             if (route.type === 'sea' && !(from.seaportsOpen && to.seaportsOpen))
@@ -407,27 +463,33 @@ export const useGameStore = create<GameStore>()(
             if (route.type === 'land' && !(from.bordersOpen && to.bordersOpen))
               continue
 
-            let routeMult = 1.0
+            // Transmission chance scales with infected ratio and route traffic
+            const fromInfectedRatio = from.infected / from.population
+            let traitBonus = 1.0
             if (route.type === 'air')
-              routeMult = 1 + state.traits.transmissions.air * 0.5
+              traitBonus += state.traits.transmissions.air * 0.8
             if (route.type === 'sea')
-              routeMult = 1 + state.traits.transmissions.water * 0.5
+              traitBonus += state.traits.transmissions.water * 0.8
+            if (route.type === 'land')
+              traitBonus +=
+                (state.traits.transmissions.rodent +
+                  state.traits.transmissions.livestock) *
+                0.4
 
-            const infectedRatio = from.infected / from.population
             const transmissionChance =
-              infectedRatio *
+              fromInfectedRatio *
               route.traffic *
-              0.01 *
-              routeMult *
+              0.02 *
+              traitBonus *
               diffMult.infection
 
             if (Math.random() < transmissionChance) {
-              to.infected = Math.ceil(Math.random() * 3) + 1
+              to.infected = Math.ceil(Math.random() * 5) + 1
               state.events.unshift({
                 id: `evt-${Date.now()}-${Math.random()}`,
                 timestamp: state.tickCount,
                 type: 'infection',
-                message: `Disease spreads to ${to.name}!`,
+                message: `Disease has crossed borders into ${to.name}!`,
                 severity: 'warning',
                 countryId: to.id,
               })
@@ -435,16 +497,18 @@ export const useGameStore = create<GameStore>()(
           }
         }
 
-        // Cure progress
-        if (state.cure.isDetected || totalInfected > 10000) {
-          if (!state.cure.isDetected && totalInfected > 10000) {
+        // 6. CURE PROGRESS
+        // Cure starts if detected or if global deaths reach a threshold
+        if (state.cure.isDetected || totalDead > 0) {
+          if (!state.cure.isDetected) {
             state.cure.isDetected = true
             state.cure.researchStarted = true
             state.events.unshift({
-              id: `evt-cure-${Date.now()}`,
+              id: `evt-cure-start-${Date.now()}`,
               timestamp: state.tickCount,
               type: 'cure',
-              message: 'Disease has been detected! Global research begins.',
+              message:
+                'Public health crisis declared! WHO initiates cure development.',
               severity: 'critical',
             })
           }
@@ -456,54 +520,37 @@ export const useGameStore = create<GameStore>()(
           state.cure.totalResearchPower = researchPower
 
           const drugResistancePenalty =
-            1 - state.traits.abilities.drugResistance * 0.15
+            1 - state.traits.abilities.drugResistance * 0.2
           const hardeningPenalty =
             1 - state.traits.abilities.geneticHardening * 0.1
 
+          const cureIncrease =
+            researchPower *
+            0.005 *
+            drugResistancePenalty *
+            hardeningPenalty *
+            diffMult.cure
           state.cure.progress = Math.min(
             100,
-            state.cure.progress +
-              researchPower *
-                0.01 *
-                drugResistancePenalty *
-                hardeningPenalty *
-                diffMult.cure
+            state.cure.progress + cureIncrease
           )
         }
 
-        // DNA rewards
-        const totalPopulation = state.countries.reduce(
-          (sum, c) => sum + c.population,
-          0
-        )
-        const globalInfectionRate = totalInfected / totalPopulation
-
-        if (state.tickCount % 50 === 0 && globalInfectionRate > 0.001) {
-          const dnaGain = Math.ceil(globalInfectionRate * 10 * diffMult.dna)
-          state.dnaPoints += dnaGain
+        // 7. DNA REWARDS
+        if (state.tickCount % 20 === 0) {
+          const infectedRatio =
+            totalInfected / (totalInfected + totalHealthy + totalDead)
+          if (infectedRatio > 0) {
+            const dnaGain = Math.ceil(infectedRatio * 5 * diffMult.dna)
+            state.dnaPoints += dnaGain
+          }
         }
 
-        // Win/Lose conditions
+        // 8. WIN/LOSS CONDITIONS
         if (totalHealthy === 0 && totalInfected === 0) {
           state.status = 'won'
-          state.events.unshift({
-            id: `win-${Date.now()}`,
-            timestamp: state.tickCount,
-            type: 'milestone',
-            message: 'Humanity has been eradicated. You win!',
-            severity: 'critical',
-          })
-        }
-
-        if (state.cure.progress >= 100) {
+        } else if (state.cure.progress >= 100) {
           state.status = 'lost'
-          state.events.unshift({
-            id: `lost-${Date.now()}`,
-            timestamp: state.tickCount,
-            type: 'cure',
-            message: 'Cure has been deployed. Disease eradicated. You lose.',
-            severity: 'critical',
-          })
         }
       })
     },

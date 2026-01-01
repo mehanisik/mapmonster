@@ -20,7 +20,9 @@ export default function MapComponent() {
   const countries = useGameStore((state) => state.countries)
   const dnaAnomalies = useGameStore((state) => state.dnaAnomalies)
   const selectCountry = useGameStore((state) => state.selectCountry)
-  const infectCountry = useGameStore((state) => state.infectCountry)
+  const infectStartingCountry = useGameStore(
+    (state) => state.infectStartingCountry
+  )
   const collectDnaAnomaly = useGameStore((state) => state.collectDnaAnomaly)
 
   const mapElement = useRef<HTMLDivElement>(null)
@@ -28,8 +30,6 @@ export default function MapComponent() {
   const countrySourceRef = useRef<VectorSource | null>(null)
   const dnaSourceRef = useRef<VectorSource | null>(null)
   const heatmapLayerRef = useRef<HeatmapLayer | null>(null)
-
-  const infectedCountries = countries.filter((c) => c.infected > 0)
 
   // Refs for reactive state access in callbacks
   const countriesRef = useRef(countries)
@@ -57,8 +57,8 @@ export default function MapComponent() {
             const countryId = id.replace('country-', '')
 
             // If game just started and no infections, clicking a country starts infection
-            if (status === 'playing' && infectedCountries.length === 0) {
-              infectCountry(countryId, 1)
+            if (status === 'selecting_start') {
+              infectStartingCountry(countryId)
             } else {
               selectCountry(countryId)
             }
@@ -66,13 +66,7 @@ export default function MapComponent() {
         }
       }
     },
-    [
-      collectDnaAnomaly,
-      infectCountry,
-      selectCountry,
-      status,
-      infectedCountries.length,
-    ]
+    [collectDnaAnomaly, infectStartingCountry, selectCountry, status]
   )
 
   // Initialize map
@@ -249,7 +243,7 @@ export default function MapComponent() {
       <div ref={mapElement} className="w-full h-full" />
 
       {/* Click hint for new game */}
-      {status === 'playing' && infectedCountries.length === 0 && (
+      {status === 'selecting_start' && (
         <div className="absolute bottom-32 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full bg-purple-600/90 backdrop-blur-xl text-white text-sm font-bold animate-pulse shadow-xl shadow-purple-900/50">
           👆 Click a country to start the infection
         </div>

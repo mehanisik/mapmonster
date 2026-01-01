@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useGameStore } from '~/libs/store/use-game-store'
 
 /**
@@ -9,37 +9,9 @@ import { useGameStore } from '~/libs/store/use-game-store'
  */
 export default function SimulationEngine() {
   const status = useGameStore((state) => state.status)
-  const countries = useGameStore((state) => state.countries)
-  const gameSpeed = useGameStore((state) => state.gameSpeed)
   const gameTick = useGameStore((state) => state.gameTick)
-  const infectCountry = useGameStore((state) => state.infectCountry)
+  const gameSpeed = useGameStore((state) => state.gameSpeed)
   const spawnDnaAnomaly = useGameStore((state) => state.spawnDnaAnomaly)
-
-  const infectedCount = countries.filter((c) => c.infected > 0).length
-  const initialized = useRef(false)
-
-  // Start initial infection when game starts
-  useEffect(() => {
-    if (status === 'playing' && !initialized.current && infectedCount === 0) {
-      initialized.current = true
-
-      // Pick a random starting country (prefer developing/poor for balance)
-      const eligibleCountries = countries.filter(
-        (c) => c.wealth !== 'wealthy' && !c.isIsland
-      )
-      const startCountry =
-        eligibleCountries[Math.floor(Math.random() * eligibleCountries.length)]
-
-      if (startCountry) {
-        infectCountry(startCountry.id, 1)
-      }
-    }
-
-    // Reset initialization flag when game is reset
-    if (status === 'menu') {
-      initialized.current = false
-    }
-  }, [infectCountry, status, infectedCount, countries])
 
   // Main game tick loop
   const runTick = useCallback(() => {
