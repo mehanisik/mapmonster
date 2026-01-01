@@ -11,13 +11,8 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
-import { resetGame } from '~/libs/features/game/game-slice'
-import {
-  selectGameStatus,
-  selectGameSummary,
-  selectInfectedCountryCount,
-} from '~/libs/features/game/selectors'
-import { useAppDispatch, useAppSelector } from '~/libs/hooks'
+import { useGameSummary } from '~/libs/store/use-game-selectors'
+import { useGameStore } from '~/libs/store/use-game-store'
 
 function formatNumber(num: number): string {
   if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`
@@ -27,30 +22,30 @@ function formatNumber(num: number): string {
 }
 
 export default function GameOverScreen() {
-  const dispatch = useAppDispatch()
-  const gameStatus = useAppSelector(selectGameStatus)
-  const summary = useAppSelector(selectGameSummary)
-  const infectedCountries = useAppSelector(selectInfectedCountryCount)
+  const status = useGameStore((state) => state.status)
+  const resetGame = useGameStore((state) => state.resetGame)
+  const summary = useGameSummary()
+  const infectedCountries = summary.infectedCountries
 
-  const isWin = gameStatus === 'won'
+  const isWin = status === 'won'
 
   const handlePlayAgain = () => {
-    dispatch(resetGame())
+    resetGame()
   }
 
-  if (gameStatus !== 'won' && gameStatus !== 'lost') {
+  if (status !== 'won' && status !== 'lost') {
     return null
   }
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-500">
+    <div className="fixed inset-0 z-200 flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-500">
       <Card className="w-[480px] p-8 relative overflow-hidden border-white/5 bg-zinc-900/80 backdrop-blur-2xl shadow-2xl shadow-black rounded-3xl">
         {/* Background glow */}
         <div
           className={`absolute inset-0 ${
             isWin
-              ? 'bg-gradient-to-br from-red-600/20 via-transparent to-purple-600/20'
-              : 'bg-gradient-to-br from-blue-600/20 via-transparent to-cyan-600/20'
+              ? 'bg-linear-to-br from-red-600/20 via-transparent to-purple-600/20'
+              : 'bg-linear-to-br from-blue-600/20 via-transparent to-cyan-600/20'
           }`}
         />
 
@@ -169,8 +164,8 @@ export default function GameOverScreen() {
             onClick={handlePlayAgain}
             className={`w-full h-14 rounded-2xl text-lg font-black tracking-wide transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl ${
               isWin
-                ? 'bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-500 hover:to-purple-500 shadow-red-900/40'
-                : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 shadow-blue-900/40'
+                ? 'bg-linear-to-r from-red-600 to-purple-600 hover:from-red-500 hover:to-purple-500 shadow-red-900/40'
+                : 'bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 shadow-blue-900/40'
             }`}
           >
             <HugeiconsIcon

@@ -18,8 +18,6 @@ export const metadata: Metadata = {
     'Take control of a sentient digital pathogen and reshape the world.',
 }
 
-import StoreProvider from '~/components/providers/store-provider'
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StoreProvider>{children}</StoreProvider>
+        {children}
       </body>
     </html>
   )

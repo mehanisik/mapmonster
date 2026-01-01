@@ -9,12 +9,8 @@ import {
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Progress } from '~/components/ui/progress'
-import {
-  selectCure,
-  selectGameSummary,
-  selectInfectedCountryCount,
-} from '~/libs/features/game/selectors'
-import { useAppSelector } from '~/libs/hooks'
+import { useGameSummary } from '~/libs/store/use-game-selectors'
+import { useGameStore } from '~/libs/store/use-game-store'
 
 function formatNumber(num: number): string {
   if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`
@@ -24,9 +20,9 @@ function formatNumber(num: number): string {
 }
 
 export default function WorldStatsPanel() {
-  const summary = useAppSelector(selectGameSummary)
-  const infectedCountries = useAppSelector(selectInfectedCountryCount)
-  const cure = useAppSelector(selectCure)
+  const summary = useGameSummary()
+  const cure = useGameStore((state) => state.cure)
+  const infectedCountries = summary.infectedCountries
 
   const infectionPercentage = (summary.infected / summary.population) * 100
 

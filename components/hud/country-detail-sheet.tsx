@@ -18,9 +18,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '~/components/ui/sheet'
-import { selectCountry } from '~/libs/features/game/game-slice'
-import { selectSelectedCountry } from '~/libs/features/game/selectors'
-import { useAppDispatch, useAppSelector } from '~/libs/hooks'
+import { useSelectedCountry } from '~/libs/store/use-game-selectors'
+import { useGameStore } from '~/libs/store/use-game-store'
 
 function formatNumber(num: number): string {
   if (num >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)}B`
@@ -59,8 +58,8 @@ const getTransportStatus = (has: boolean, open: boolean) => {
 }
 
 export default function CountryDetailSheet() {
-  const dispatch = useAppDispatch()
-  const country = useAppSelector(selectSelectedCountry)
+  const country = useSelectedCountry()
+  const setSelectedCountryId = useGameStore((state) => state.selectCountry)
 
   if (!country) return null
 
@@ -71,7 +70,7 @@ export default function CountryDetailSheet() {
   return (
     <Sheet
       open={!!country}
-      onOpenChange={(open) => !open && dispatch(selectCountry(null))}
+      onOpenChange={(open) => !open && setSelectedCountryId(null)}
     >
       <SheetContent className="w-[400px] sm:w-[480px] border-l border-white/10 bg-zinc-950/95 backdrop-blur-2xl text-zinc-100 overflow-y-auto">
         <SheetHeader className="mb-6">

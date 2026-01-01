@@ -23,30 +23,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import { resetGame, setGameSpeed } from '~/libs/features/game/game-slice'
-import {
-  selectDnaPoints,
-  selectGameState,
-  selectGameStatus,
-} from '~/libs/features/game/selectors'
-import { useAppDispatch, useAppSelector } from '~/libs/hooks'
+import { useGameStore } from '~/libs/store/use-game-store'
 import EvolutionLab from '../dashboard/evolution-lab'
 
 export default function GameControls() {
-  const dispatch = useAppDispatch()
-  const dnaPoints = useAppSelector(selectDnaPoints)
-  const gameState = useAppSelector(selectGameState)
-  const gameStatus = useAppSelector(selectGameStatus)
+  const status = useGameStore((state) => state.status)
+  const dnaPoints = useGameStore((state) => state.dnaPoints)
+  const gameSpeed = useGameStore((state) => state.gameSpeed)
+  const setGameSpeed = useGameStore((state) => state.setGameSpeed)
+  const resetGame = useGameStore((state) => state.resetGame)
 
   const handleSpeedChange = (speed: number) => {
-    dispatch(setGameSpeed(speed))
+    setGameSpeed(speed)
   }
 
   const handleReset = () => {
-    dispatch(resetGame())
+    resetGame()
   }
 
-  if (gameStatus !== 'playing') {
+  if (status !== 'playing') {
     return null
   }
 
@@ -65,7 +60,7 @@ export default function GameControls() {
         <div className="flex items-center gap-1 px-2">
           <Button
             size="sm"
-            variant={gameState.gameSpeed === 1 ? 'secondary' : 'ghost'}
+            variant={gameSpeed === 1 ? 'secondary' : 'ghost'}
             onClick={() => handleSpeedChange(1)}
             className="rounded-xl h-10 w-10 p-0"
           >
@@ -73,7 +68,7 @@ export default function GameControls() {
           </Button>
           <Button
             size="sm"
-            variant={gameState.gameSpeed === 2 ? 'secondary' : 'ghost'}
+            variant={gameSpeed === 2 ? 'secondary' : 'ghost'}
             onClick={() => handleSpeedChange(2)}
             className="rounded-xl h-10 w-10 p-0"
           >
@@ -81,7 +76,7 @@ export default function GameControls() {
           </Button>
           <Button
             size="sm"
-            variant={gameState.gameSpeed === 3 ? 'secondary' : 'ghost'}
+            variant={gameSpeed === 3 ? 'secondary' : 'ghost'}
             onClick={() => handleSpeedChange(3)}
             className="rounded-xl h-10 w-10 p-0"
           >
@@ -95,7 +90,7 @@ export default function GameControls() {
         {/* Evolution Lab Button */}
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="gap-2 rounded-2xl px-5 h-12 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold shadow-lg shadow-purple-900/30">
+            <Button className="gap-2 rounded-2xl px-5 h-12 bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold shadow-lg shadow-purple-900/30">
               <HugeiconsIcon icon={DnaIcon} size={18} />
               <span className="text-sm">Evolution Lab</span>
             </Button>

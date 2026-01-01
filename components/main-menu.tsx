@@ -15,16 +15,7 @@ import { useState } from 'react'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
-import {
-  resetGame,
-  setDifficulty,
-  startGame,
-} from '~/libs/features/game/game-slice'
-import {
-  selectDifficulty,
-  selectGameStatus,
-} from '~/libs/features/game/selectors'
-import { useAppDispatch, useAppSelector } from '~/libs/hooks'
+import { useGameStore } from '~/libs/store/use-game-store'
 import type { Difficulty } from '~/libs/types/game'
 
 const DIFFICULTY_OPTIONS: Array<{
@@ -65,25 +56,28 @@ const DIFFICULTY_OPTIONS: Array<{
 ]
 
 export default function MainMenu() {
-  const dispatch = useAppDispatch()
-  const gameStatus = useAppSelector(selectGameStatus)
-  const currentDifficulty = useAppSelector(selectDifficulty)
+  const status = useGameStore((state) => state.status)
+  const currentDifficulty = useGameStore((state) => state.difficulty)
+  const resetGame = useGameStore((state) => state.resetGame)
+  const setDifficulty = useGameStore((state) => state.setDifficulty)
+  const startGame = useGameStore((state) => state.startGame)
+
   const [selectedDifficulty, setSelectedDifficulty] =
     useState<Difficulty>(currentDifficulty)
   const [soundEnabled, setSoundEnabled] = useState(true)
 
   const handleStart = () => {
-    dispatch(resetGame())
-    dispatch(setDifficulty(selectedDifficulty))
-    dispatch(startGame())
+    resetGame()
+    setDifficulty(selectedDifficulty)
+    startGame()
   }
 
-  if (gameStatus !== 'menu') {
+  if (status !== 'menu') {
     return null
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-950/90 backdrop-blur-xl transition-all duration-700">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-zinc-950/90 backdrop-blur-xl transition-all duration-700">
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/20 blur-[150px] rounded-full animate-pulse" />
@@ -183,7 +177,7 @@ export default function MainMenu() {
         {/* Start Button */}
         <Button
           onClick={handleStart}
-          className="w-full h-16 rounded-2xl bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white text-lg font-black tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-purple-900/50 group"
+          className="w-full h-16 rounded-2xl bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white text-lg font-black tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-purple-900/50 group"
         >
           <HugeiconsIcon
             icon={PlayIcon}

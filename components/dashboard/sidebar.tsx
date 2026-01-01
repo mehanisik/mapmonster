@@ -14,16 +14,18 @@ import { MapMonsterLogo } from '~/components/ui/logo'
 import { Progress } from '~/components/ui/progress'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
-import type { MapEvent } from '~/libs/features/events/events-slice'
-import { useAppSelector } from '~/libs/hooks'
-import type { RootState } from '~/libs/store'
+import { useGameSummary } from '~/libs/store/use-game-selectors'
+import { useGameStore } from '~/libs/store/use-game-store'
 import EvolutionLab from './evolution-lab'
 
 export default function Sidebar() {
-  const { monsters, totalInfected, worldPopulation, cureProgress, dnaPoints } =
-    useAppSelector((state: RootState) => state.events)
+  const countries = useGameStore((state) => state.countries)
+  const summary = useGameSummary()
 
-  const infectionPercentage = (totalInfected / worldPopulation) * 100
+  const infectedCountries = countries.filter((c) => c.infected > 0)
+  const infectionPercentage = (summary.infected / summary.population) * 100
+  const cureProgress = summary.cureProgress
+  const dnaPoints = summary.dnaPoints
 
   return (
     <Card className="w-80 pointer-events-auto h-[600px] flex flex-col overflow-hidden border-black/5 bg-white/70 backdrop-blur-3xl shadow-2xl">
@@ -98,12 +100,12 @@ export default function Sidebar() {
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                 <HugeiconsIcon icon={ShieldIcon} size={12} />
-                Chaos Vectors
+                Active Hotspots
               </div>
               <div className="space-y-2">
-                {monsters.slice(0, 5).map((m: MapEvent) => (
+                {infectedCountries.slice(0, 5).map((c) => (
                   <div
-                    key={m.id}
+                    key={c.id}
                     className="group p-3 rounded-2xl bg-zinc-50 border border-black/3 hover:border-purple-500/30 hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md"
                   >
                     <div className="flex justify-between items-start mb-1">
@@ -114,26 +116,28 @@ export default function Sidebar() {
                           className="text-purple-500"
                         />
                         <span className="text-[10px] font-mono font-bold text-zinc-400">
-                          {m.id.split('-')[1]}
+                          {c.code}
                         </span>
                       </div>
-                      <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-purple-100 text-purple-600 uppercase tracking-tighter">
-                        Active Vector
+                      <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-red-100 text-red-600 uppercase tracking-tighter">
+                        Infected
                       </span>
                     </div>
                     <div className="text-[11px] font-bold text-zinc-900 leading-tight mb-2 truncate">
-                      {m.title}
+                      {c.name}
                     </div>
                     <div className="flex gap-4 text-[10px] font-mono text-zinc-500">
-                      <span>{m.lat.toFixed(2)}°N</span>
-                      <span>{m.lng.toFixed(2)}°E</span>
+                      <span>
+                        {((c.infected / c.population) * 100).toFixed(1)}% Reach
+                      </span>
+                      <span>{c.climate}</span>
                     </div>
                   </div>
                 ))}
               </div>
-              {monsters.length > 5 && (
+              {infectedCountries.length > 5 && (
                 <div className="text-center text-[9px] text-zinc-400 font-bold uppercase tracking-widest bg-zinc-50 py-2 rounded-xl border border-dashed border-zinc-200">
-                  + {monsters.length - 5} Latent Strains
+                  + {infectedCountries.length - 5} More Regions
                 </div>
               )}
             </div>
@@ -161,9 +165,9 @@ export default function Sidebar() {
                     INFECTED
                   </div>
                   <div className="text-xs font-mono font-black">
-                    {totalInfected > 1000000
-                      ? `${(totalInfected / 1000000).toFixed(1)}M`
-                      : totalInfected.toLocaleString()}
+                    {summary.infected > 1000000
+                      ? `${(summary.infected / 1000000).toFixed(1)}M`
+                      : summary.infected.toLocaleString()}
                   </div>
                 </div>
               </div>

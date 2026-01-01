@@ -2,8 +2,7 @@
 
 import { Card } from '~/components/ui/card'
 import { ScrollArea } from '~/components/ui/scroll-area'
-import { selectRecentEvents } from '~/libs/features/game/selectors'
-import { useAppSelector } from '~/libs/hooks'
+import { useWorldEvents } from '~/libs/store/use-game-selectors'
 import type { WorldEvent } from '~/libs/types/game'
 
 function getEventIcon(type: WorldEvent['type']): string {
@@ -37,7 +36,10 @@ function getEventColor(severity: WorldEvent['severity']): string {
 }
 
 export default function NewsFeed() {
-  const events = useAppSelector(selectRecentEvents)
+  const allEvents = useWorldEvents()
+  const events = [...allEvents]
+    .sort((a, b) => b.timestamp - a.timestamp)
+    .slice(0, 10)
 
   if (events.length === 0) {
     return (

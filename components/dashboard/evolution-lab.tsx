@@ -17,12 +17,8 @@ import {
   SYMPTOMS,
   TRANSMISSIONS,
 } from '~/libs/data/traits-config'
-import { purchaseTrait } from '~/libs/features/game/game-slice'
-import {
-  selectDnaPoints,
-  selectOwnedTraitIds,
-} from '~/libs/features/game/selectors'
-import { useAppDispatch, useAppSelector } from '~/libs/hooks'
+import { useOwnedTraitIds } from '~/libs/store/use-game-selectors'
+import { useGameStore } from '~/libs/store/use-game-store'
 import type { TraitConfig } from '~/libs/types/game'
 
 interface TraitCardProps {
@@ -131,12 +127,12 @@ function TraitCard({
 }
 
 export default function EvolutionLab() {
-  const dispatch = useAppDispatch()
-  const dnaPoints = useAppSelector(selectDnaPoints)
-  const ownedTraitIds = useAppSelector(selectOwnedTraitIds)
+  const dnaPoints = useGameStore((state) => state.dnaPoints)
+  const purchaseTrait = useGameStore((state) => state.purchaseTrait)
+  const ownedTraitIds = useOwnedTraitIds()
 
   const handlePurchase = (traitId: string) => {
-    dispatch(purchaseTrait(traitId))
+    purchaseTrait(traitId)
   }
 
   const renderTraitList = (traits: Record<string, TraitConfig>) => {

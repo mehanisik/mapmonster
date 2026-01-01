@@ -7,13 +7,14 @@ import {
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Progress } from '~/components/ui/progress'
-import { useAppSelector } from '~/libs/hooks'
-import type { RootState } from '~/libs/store'
+import { useGameStore } from '~/libs/store/use-game-store'
 
 export default function GameStats() {
-  const { totalInfected, worldPopulation, cureProgress } = useAppSelector(
-    (state: RootState) => state.events
-  )
+  const countries = useGameStore((state) => state.countries)
+  const cureProgress = useGameStore((state) => state.cure.progress)
+
+  const totalInfected = countries.reduce((sum, c) => sum + c.infected, 0)
+  const worldPopulation = countries.reduce((sum, c) => sum + c.population, 0)
 
   const infectionPercentage = (totalInfected / worldPopulation) * 100
 
