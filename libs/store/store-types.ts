@@ -12,7 +12,6 @@ import type {
   WorldEvent,
 } from '~/libs/types/game'
 
-
 export type {
   Country,
   Difficulty,
@@ -25,7 +24,6 @@ export type {
   DnaAnomaly,
   CureState,
 }
-
 
 export interface GameSlice {
   status: GameStatus
@@ -74,13 +72,11 @@ export interface EventSlice {
   ) => void
 }
 
-
 export type GameStore = GameSlice &
   WorldSlice &
   DiseaseSlice &
   SimulationSlice &
   EventSlice
-
 
 export type GameSliceCreator<T> = StateCreator<
   GameStore,

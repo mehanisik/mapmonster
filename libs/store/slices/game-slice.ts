@@ -34,7 +34,6 @@ export const createGameSlice: GameSliceCreator<
 
   resetGame: () => {
     set((state) => {
-      
       const savedCountries = state.countries.map((c) => ({
         ...c,
         infected: 0,
@@ -47,22 +46,16 @@ export const createGameSlice: GameSliceCreator<
       }))
       const savedRoutes = state.routes
 
-      
-      
-
-      
       state.status = 'menu'
       state.difficulty = 'normal'
       state.tickCount = 0
       state.gameSpeed = 1
 
-      
       state.countries = savedCountries
       state.routes = savedRoutes
       state.selectedCountryId = null
       state.isLoadingData = false
 
-      
       state.dnaPoints = 0
       state.traits = {
         transmissions: {
@@ -100,7 +93,6 @@ export const createGameSlice: GameSliceCreator<
       }
       state.stats = { infectivity: 0, severity: 0, lethality: 0 }
 
-      
       state.cure = {
         progress: 0,
         isDetected: false,
@@ -109,7 +101,6 @@ export const createGameSlice: GameSliceCreator<
       }
       state.dnaAnomalies = []
 
-      
       state.events = []
     })
   },

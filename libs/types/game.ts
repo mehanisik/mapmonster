@@ -2,41 +2,33 @@
  * Game Types - Core type definitions for the Plague Inc. style simulation
  */
 
-
-
-
-
 export type Climate = 'hot' | 'temperate' | 'cold' | 'arid'
 export type WealthLevel = 'poor' | 'developing' | 'wealthy'
 
 export interface Country {
   id: string
   name: string
-  code: string 
+  code: string
 
-  
   population: number
   infected: number
   dead: number
 
-  
   lat: number
   lng: number
   climate: Climate
   isIsland: boolean
-  geometry?: object 
+  geometry?: object
 
-  
   wealth: WealthLevel
-  healthcare: number 
+  healthcare: number
   hasAirport: boolean
   hasSeaport: boolean
 
-  
   bordersOpen: boolean
   airportsOpen: boolean
   seaportsOpen: boolean
-  awareness: number 
+  awareness: number
   researchContribution: number
 }
 
@@ -45,55 +37,47 @@ export type RouteType = 'air' | 'sea' | 'land'
 export interface TransportRoute {
   id: string
   type: RouteType
-  from: string 
-  to: string 
-  traffic: number 
+  from: string
+  to: string
+  traffic: number
 }
 
-
-
-
-
 export interface TransmissionLevels {
-  air: number 
-  water: number 
-  blood: number 
-  insect: number 
-  rodent: number 
-  livestock: number 
+  air: number
+  water: number
+  blood: number
+  insect: number
+  rodent: number
+  livestock: number
 }
 
 export interface SymptomState {
-  
   coughing: boolean
   rash: boolean
   sweating: boolean
   sneezing: boolean
 
-  
   fever: boolean
   nausea: boolean
   insomnia: boolean
   cysts: boolean
 
-  
   seizures: boolean
   paranoia: boolean
   inflammation: boolean
   hemorrhaging: boolean
 
-  
   totalOrganFailure: boolean
   coma: boolean
   necrosis: boolean
 }
 
 export interface AbilityLevels {
-  coldResistance: number 
-  heatResistance: number 
-  drugResistance: number 
-  geneticHardening: number 
-  geneticReShuffle: number 
+  coldResistance: number
+  heatResistance: number
+  drugResistance: number
+  geneticHardening: number
+  geneticReShuffle: number
 }
 
 export interface DiseaseTraits {
@@ -103,17 +87,13 @@ export interface DiseaseTraits {
 }
 
 export interface DiseaseStats {
-  infectivity: number 
-  severity: number 
-  lethality: number 
+  infectivity: number
+  severity: number
+  lethality: number
 }
 
-
-
-
-
 export interface CureState {
-  progress: number 
+  progress: number
   isDetected: boolean
   researchStarted: boolean
   totalResearchPower: number
@@ -128,10 +108,6 @@ export interface WorldEvent {
   severity: 'info' | 'warning' | 'critical'
 }
 
-
-
-
-
 export type Difficulty = 'casual' | 'normal' | 'brutal' | 'mega_brutal'
 export type GameStatus = 'menu' | 'selecting_start' | 'playing' | 'won' | 'lost'
 
@@ -144,36 +120,26 @@ export interface DnaAnomaly {
 }
 
 export interface GameState {
-  
   status: GameStatus
   difficulty: Difficulty
   tickCount: number
-  gameSpeed: number 
+  gameSpeed: number
 
-  
   dnaPoints: number
   traits: DiseaseTraits
   stats: DiseaseStats
 
-  
   countries: Country[]
   routes: TransportRoute[]
 
-  
   cure: CureState
 
-  
   events: WorldEvent[]
   selectedCountryId: string | null
   isLoadingData: boolean
 
-  
   dnaAnomalies: DnaAnomaly[]
 }
-
-
-
-
 
 export interface TraitConfig {
   id: string

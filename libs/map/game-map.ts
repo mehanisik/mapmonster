@@ -24,19 +24,16 @@ export class GameMap {
   private geojsonFormat: GeoJSON
 
   constructor(target: HTMLElement, onClick: MapEventHandler) {
-    
     this.countrySource = new VectorSource()
     this.borderSource = new VectorSource()
     this.dnaSource = new VectorSource()
     this.geojsonFormat = new GeoJSON()
 
-    
     const dnaLayer = this.createDnaLayer()
     const borderLayer = this.createBorderLayer()
     const countryLayer = this.createCountryMarkerLayer()
     this.heatmapLayer = this.createHeatmapLayer()
 
-    
     this.map = new OlMap({
       target,
       layers: [
@@ -60,24 +57,10 @@ export class GameMap {
       }),
     })
 
-    
     this.bindEvents(onClick, target)
   }
 
-  
-  
-
   public updateCountries(countries: Country[]) {
-    
-    
-    
-
-    
-    
-    
-    
-
-    
     if (this.countrySource.getFeatures().length === 0 && countries.length > 0) {
       this.initialRender(countries)
     } else {
@@ -91,7 +74,7 @@ export class GameMap {
       const country = this.countrySource.getFeatureById(
         `country-${anomaly.countryId}`
       )
-      
+
       const coordinates = country
         ? (country.getGeometry() as Point).getCoordinates()
         : fromLonLat([0, 0])
@@ -112,15 +95,11 @@ export class GameMap {
     }
   }
 
-  
-  
-
   private initialRender(countries: Country[]) {
     const markerFeatures: Feature[] = []
     const borderFeatures: Feature[] = []
 
     for (const country of countries) {
-      
       const marker = new Feature({
         geometry: new Point(fromLonLat([country.lng, country.lat])),
         name: country.name,
@@ -131,31 +110,20 @@ export class GameMap {
       marker.setId(`country-${country.id}`)
       markerFeatures.push(marker)
 
-      
       if (country.geometry) {
-        
-        
-        
-        
-
-        
-        
-
         let geometry = null
         try {
           geometry = this.geojsonFormat.readGeometry(country.geometry, {
             featureProjection: 'EPSG:3857',
           })
-        } catch {
-          
-        }
+        } catch {}
 
         if (geometry) {
           const border = new Feature(geometry)
           border.setProperties({
             infected: country.infected,
             population: country.population,
-            id: country.id, 
+            id: country.id,
           })
           border.setId(`border-${country.id}`)
           borderFeatures.push(border)
@@ -182,7 +150,6 @@ export class GameMap {
         border.set('population', country.population)
       }
     }
-    
   }
 
   private createDnaLayer() {
@@ -241,8 +208,7 @@ export class GameMap {
         const population = feature.get('population') || 1
         const infectionRate = infected / population
 
-        
-        let color = 'rgba(100, 100, 100, 0.4)' 
+        let color = 'rgba(100, 100, 100, 0.4)'
         if (infectionRate > 0) {
           color = 'rgba(239, 68, 68, 0.9)'
         }
@@ -305,7 +271,6 @@ export class GameMap {
           if (id.startsWith('dna-')) {
             onClick(id, 'dna')
           } else if (id.startsWith('country-')) {
-            
             onClick(id.replace('country-', ''), 'country')
           }
         }

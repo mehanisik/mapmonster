@@ -107,19 +107,16 @@ export const createSimulationSlice: GameSliceCreator<
       let totalHealthy = 0
       let totalDead = 0
 
-      
       for (const country of state.countries) {
         const currentlyInfected = country.infected
         const currentlyDead = country.dead
         const healthy = country.population - currentlyInfected - currentlyDead
 
         if (currentlyInfected > 0 && healthy > 0) {
-          
           const climateMult = getClimateMultiplier(country, state.traits)
           const wealthMult = getWealthMultiplier(country, state.traits)
-          const healthcarePenalty = 1 - (country.healthcare / 100) * 0.8 
+          const healthcarePenalty = 1 - (country.healthcare / 100) * 0.8
 
-          
           const baseInfectivity = 0.05 + state.stats.infectivity * 0.02
           const spreadRate =
             baseInfectivity *
@@ -128,7 +125,6 @@ export const createSimulationSlice: GameSliceCreator<
             healthcarePenalty *
             diffMult.infection
 
-          
           const infectionRatio = currentlyInfected / country.population
           const newInfections = Math.max(
             1,
@@ -141,7 +137,6 @@ export const createSimulationSlice: GameSliceCreator<
           )
         }
 
-        
         if (country.infected > 0 && state.stats.lethality > 0) {
           const baseLethality = state.stats.lethality * 0.001
           const healthcarePenalty = 1 - (country.healthcare / 100) * 0.5
@@ -156,8 +151,6 @@ export const createSimulationSlice: GameSliceCreator<
           country.infected -= newDeaths
         }
 
-        
-        
         const impactRatio =
           (country.infected + country.dead) / country.population
         const visibilityFactor = state.stats.severity * 0.1 + impactRatio * 50
@@ -166,7 +159,6 @@ export const createSimulationSlice: GameSliceCreator<
           country.awareness + visibilityFactor * 0.05
         )
 
-        
         if (
           country.awareness > 30 &&
           country.bordersOpen &&
@@ -213,12 +205,10 @@ export const createSimulationSlice: GameSliceCreator<
           })
         }
 
-        
-        
         if (country.awareness > 20) {
           const wealthFactor =
             { wealthy: 2.5, developing: 1.0, poor: 0.3 }[country.wealth] || 1.0
-          const chaosFactor = 1 - (country.dead / country.population) * 2 
+          const chaosFactor = 1 - (country.dead / country.population) * 2
           country.researchContribution = Math.max(
             0,
             country.healthcare * wealthFactor * chaosFactor * 0.005
@@ -230,7 +220,6 @@ export const createSimulationSlice: GameSliceCreator<
         totalDead += country.dead
       }
 
-      
       if (state.tickCount % 5 === 0) {
         for (const route of state.routes) {
           const from = state.countries.find((c) => c.id === route.from)
@@ -238,7 +227,6 @@ export const createSimulationSlice: GameSliceCreator<
 
           if (!(from && to) || from.infected <= 10 || to.infected > 0) continue
 
-          
           if (route.type === 'air' && !(from.airportsOpen && to.airportsOpen))
             continue
           if (route.type === 'sea' && !(from.seaportsOpen && to.seaportsOpen))
@@ -246,7 +234,6 @@ export const createSimulationSlice: GameSliceCreator<
           if (route.type === 'land' && !(from.bordersOpen && to.bordersOpen))
             continue
 
-          
           const fromInfectedRatio = from.infected / from.population
           let traitBonus = 1.0
           if (route.type === 'air')
@@ -280,8 +267,6 @@ export const createSimulationSlice: GameSliceCreator<
         }
       }
 
-      
-      
       if (state.cure.isDetected || totalDead > 0) {
         if (!state.cure.isDetected) {
           state.cure.isDetected = true
@@ -316,7 +301,6 @@ export const createSimulationSlice: GameSliceCreator<
         state.cure.progress = Math.min(100, state.cure.progress + cureIncrease)
       }
 
-      
       if (state.tickCount % 20 === 0) {
         const infectedRatio =
           totalInfected / (totalInfected + totalHealthy + totalDead)
@@ -326,7 +310,6 @@ export const createSimulationSlice: GameSliceCreator<
         }
       }
 
-      
       if (totalHealthy === 0 && totalInfected === 0) {
         state.status = 'won'
       } else if (state.cure.progress >= 100) {

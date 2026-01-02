@@ -5,12 +5,7 @@
 
 import type { TraitConfig } from '../types/game'
 
-
-
-
-
 export const TRANSMISSIONS: Record<string, TraitConfig> = {
-  
   air_1: {
     id: 'air_1',
     name: 'Airborne I',
@@ -36,7 +31,6 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  
   water_1: {
     id: 'water_1',
     name: 'Waterborne I',
@@ -62,7 +56,6 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  
   blood_1: {
     id: 'blood_1',
     name: 'Blood Contact',
@@ -88,7 +81,6 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  
   insect_1: {
     id: 'insect_1',
     name: 'Insect Vector I',
@@ -113,7 +105,6 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  
   rodent_1: {
     id: 'rodent_1',
     name: 'Rodent Vector I',
@@ -139,7 +130,6 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  
   livestock_1: {
     id: 'livestock_1',
     name: 'Zoonotic Shift',
@@ -165,7 +155,6 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
     category: 'transmission',
   },
 
-  
   extreme_bioaerosol: {
     id: 'extreme_bioaerosol',
     name: 'Extreme Bioaerosol',
@@ -180,12 +169,7 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
 }
 
-
-
-
-
 export const SYMPTOMS: Record<string, TraitConfig> = {
-  
   coughing: {
     id: 'coughing',
     name: 'Coughing',
@@ -232,7 +216,6 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
     category: 'symptom',
   },
 
-  
   fever: {
     id: 'fever',
     name: 'Fever',
@@ -292,7 +275,6 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
     category: 'symptom',
   },
 
-  
   pneumonia: {
     id: 'pneumonia',
     name: 'Pneumonia',
@@ -351,7 +333,6 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
     category: 'symptom',
   },
 
-  
   necrosis: {
     id: 'necrosis',
     name: 'Necrosis',
@@ -388,12 +369,7 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
 }
 
-
-
-
-
 export const ABILITIES: Record<string, TraitConfig> = {
-  
   cold_1: {
     id: 'cold_1',
     name: 'Cold Resistance I',
@@ -419,7 +395,6 @@ export const ABILITIES: Record<string, TraitConfig> = {
     category: 'ability',
   },
 
-  
   heat_1: {
     id: 'heat_1',
     name: 'Heat Resistance I',
@@ -445,7 +420,6 @@ export const ABILITIES: Record<string, TraitConfig> = {
     category: 'ability',
   },
 
-  
   drug_1: {
     id: 'drug_1',
     name: 'Drug Resistance I',
@@ -470,7 +444,6 @@ export const ABILITIES: Record<string, TraitConfig> = {
     category: 'ability',
   },
 
-  
   hardening_1: {
     id: 'hardening_1',
     name: 'Genetic Hardening I',
@@ -518,7 +491,6 @@ export const ABILITIES: Record<string, TraitConfig> = {
     category: 'ability',
   },
 
-  
   environmental_hardening: {
     id: 'environmental_hardening',
     name: 'Environmental Hardening',
@@ -532,18 +504,15 @@ export const ABILITIES: Record<string, TraitConfig> = {
   },
 }
 
-
 export const ALL_TRAITS: Record<string, TraitConfig> = {
   ...TRANSMISSIONS,
   ...SYMPTOMS,
   ...ABILITIES,
 }
 
-
 export function getTrait(id: string): TraitConfig | undefined {
   return ALL_TRAITS[id]
 }
-
 
 export function canPurchaseTrait(
   traitId: string,
@@ -555,10 +524,8 @@ export function canPurchaseTrait(
   if (ownedTraits.includes(traitId)) return false
   if (dnaPoints < trait.cost) return false
 
-  
   return trait.prerequisites.every((prereq) => ownedTraits.includes(prereq))
 }
-
 
 export function getAvailableTraits(
   ownedTraits: string[],
@@ -568,7 +535,6 @@ export function getAvailableTraits(
     canPurchaseTrait(trait.id, ownedTraits, dnaPoints)
   )
 }
-
 
 export function calculateDiseaseStats(ownedTraits: string[]): {
   infectivity: number
