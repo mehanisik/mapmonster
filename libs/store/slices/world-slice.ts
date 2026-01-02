@@ -44,17 +44,18 @@ export const createWorldSlice: GameSliceCreator<
     })
   },
 
-  infectStartingCountry: (countryId) => {
+  initializeStartingNode: (countryId) => {
+    // formerly infectStartingCountry
     set((state) => {
       if (state.status !== 'selecting_start') return
 
       const country = state.countries.find((c) => c.id === countryId)
       if (country) {
-        country.infected = 1
+        country.synchronized = 1 // formerly infected
         state.status = 'playing'
         state.gameSpeed = 1
 
-        const message = `Outbreak initiated in ${country.name}. Target confirmed.`
+        const message = `Initial node established in ${country.name}. Synchronization sequence initiated.`
         const event: WorldEvent = {
           id: `event-${Date.now()}`,
           timestamp: 0,

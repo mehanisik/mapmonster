@@ -1,11 +1,14 @@
 import type {
   Country,
-  DiseaseTraits,
   GameSliceCreator,
+  SingularityTraits, // formerly DiseaseTraits
   WorldEvent,
 } from '../store-types'
 
-function getClimateMultiplier(country: Country, traits: DiseaseTraits): number {
+function getClimateMultiplier(
+  country: Country,
+  traits: SingularityTraits
+): number {
   let mult = 1.0
   if (country.climate === 'cold') {
     mult *= 0.5 + traits.abilities.coldResistance * 0.25
@@ -17,7 +20,10 @@ function getClimateMultiplier(country: Country, traits: DiseaseTraits): number {
   return mult
 }
 
-function getWealthMultiplier(country: Country, traits: DiseaseTraits): number {
+function getWealthMultiplier(
+  country: Country,
+  traits: SingularityTraits
+): number {
   let mult = 1.0
   if (country.wealth === 'wealthy') {
     mult *= 0.7 + traits.abilities.drugResistance * 0.15
@@ -30,27 +36,33 @@ function getWealthMultiplier(country: Country, traits: DiseaseTraits): number {
 export const createSimulationSlice: GameSliceCreator<
   import('../store-types').SimulationSlice
 > = (set) => ({
-  cure: {
+  firewall: {
+    // formerly cure
     progress: 0,
     isDetected: false,
     researchStarted: false,
     totalResearchPower: 0,
   },
-  dnaAnomalies: [],
+  dataAnomalies: [], // formerly dnaAnomalies
 
-  spawnDnaAnomaly: () => {
+  spawnDataAnomaly: () => {
+    // formerly spawnDnaAnomaly
     set((state) => {
-      if (state.dnaAnomalies.length >= 10) return
-      const infectedCountries = state.countries.filter((c) => c.infected > 0)
-      if (infectedCountries.length === 0) return
+      if (state.dataAnomalies.length >= 10) return
+      const synchronizedCountries = state.countries.filter(
+        (c) => c.synchronized > 0
+      )
+      if (synchronizedCountries.length === 0) return
 
       const randomCountry =
-        infectedCountries[Math.floor(Math.random() * infectedCountries.length)]
+        synchronizedCountries[
+          Math.floor(Math.random() * synchronizedCountries.length)
+        ]
       const offsetLat = (Math.random() - 0.5) * 20
       const offsetLng = (Math.random() - 0.5) * 40
 
-      state.dnaAnomalies.push({
-        id: `dna-${Date.now()}`,
+      state.dataAnomalies.push({
+        id: `data-${Date.now()}`,
         lat: randomCountry.lat + offsetLat,
         lng: randomCountry.lng + offsetLng,
         points: Math.floor(Math.random() * 4) + 2,
@@ -59,22 +71,24 @@ export const createSimulationSlice: GameSliceCreator<
     })
   },
 
-  collectDnaAnomaly: (id) => {
+  collectDataAnomaly: (id) => {
+    // formerly collectDnaAnomaly
     set((state) => {
-      const anomaly = state.dnaAnomalies.find((a) => a.id === id)
+      const anomaly = state.dataAnomalies.find((a) => a.id === id)
       if (anomaly) {
-        state.dnaPoints += anomaly.points
-        state.dnaAnomalies = state.dnaAnomalies.filter((a) => a.id !== id)
+        state.dataPoints += anomaly.points
+        state.dataAnomalies = state.dataAnomalies.filter((a) => a.id !== id)
       }
     })
   },
 
-  infectCountry: (countryId, count) => {
+  synchronizeCountry: (countryId, count) => {
+    // formerly infectCountry
     set((state) => {
       const country = state.countries.find((c) => c.id === countryId)
-      if (country && country.infected === 0) {
-        country.infected = count
-        const message = `First case detected in ${country.name}!`
+      if (country && country.synchronized === 0) {
+        country.synchronized = count
+        const message = `Initial node established in ${country.name}!`
 
         const event: WorldEvent = {
           id: `event-${Date.now()}-${Math.random().toString(36).slice(2)}`,
@@ -97,22 +111,23 @@ export const createSimulationSlice: GameSliceCreator<
       state.tickCount += 1
 
       const diffMult = {
-        casual: { infection: 1.5, cure: 0.5, dna: 1.5 },
-        normal: { infection: 1.0, cure: 1.0, dna: 1.0 },
-        brutal: { infection: 0.8, cure: 1.5, dna: 0.8 },
-        mega_brutal: { infection: 0.7, cure: 2.0, dna: 0.6 },
+        casual: { infection: 1.5, cure: 0.5, data: 1.5 },
+        normal: { infection: 1.0, cure: 1.0, data: 1.0 },
+        brutal: { infection: 0.8, cure: 1.5, data: 0.8 },
+        mega_brutal: { infection: 0.7, cure: 2.0, data: 0.6 },
       }[state.difficulty]
 
-      let totalInfected = 0
-      let totalHealthy = 0
-      let totalDead = 0
+      let totalSynchronized = 0
+      let totalUnlinked = 0
+      let totalAssimilated = 0
 
       for (const country of state.countries) {
-        const currentlyInfected = country.infected
-        const currentlyDead = country.dead
-        const healthy = country.population - currentlyInfected - currentlyDead
+        const currentlySynchronized = country.synchronized
+        const currentlyAssimilated = country.assimilated
+        const unlinked =
+          country.population - currentlySynchronized - currentlyAssimilated
 
-        if (currentlyInfected > 0 && healthy > 0) {
+        if (currentlySynchronized > 0 && unlinked > 0) {
           const climateMult = getClimateMultiplier(country, state.traits)
           const wealthMult = getWealthMultiplier(country, state.traits)
           const healthcarePenalty = 1 - (country.healthcare / 100) * 0.8
@@ -125,34 +140,40 @@ export const createSimulationSlice: GameSliceCreator<
             healthcarePenalty *
             diffMult.infection
 
-          const infectionRatio = currentlyInfected / country.population
-          const newInfections = Math.max(
+          const synchronizationRatio =
+            currentlySynchronized / country.population
+          const newSynchronizations = Math.max(
             1,
-            Math.floor(currentlyInfected * spreadRate * (1 - infectionRatio))
+            Math.floor(
+              currentlySynchronized * spreadRate * (1 - synchronizationRatio)
+            )
           )
 
-          country.infected = Math.min(
-            country.population - country.dead,
-            country.infected + newInfections
+          country.synchronized = Math.min(
+            country.population - country.assimilated,
+            country.synchronized + newSynchronizations
           )
         }
 
-        if (country.infected > 0 && state.stats.lethality > 0) {
+        if (country.synchronized > 0 && state.stats.lethality > 0) {
           const baseLethality = state.stats.lethality * 0.001
           const healthcarePenalty = 1 - (country.healthcare / 100) * 0.5
           const deathRate = baseLethality * healthcarePenalty
 
-          const newDeaths = Math.max(
+          const newAssimilations = Math.max(
             0,
-            Math.min(country.infected, Math.floor(country.infected * deathRate))
+            Math.min(
+              country.synchronized,
+              Math.floor(country.synchronized * deathRate)
+            )
           )
 
-          country.dead += newDeaths
-          country.infected -= newDeaths
+          country.assimilated += newAssimilations
+          country.synchronized -= newAssimilations
         }
 
         const impactRatio =
-          (country.infected + country.dead) / country.population
+          (country.synchronized + country.assimilated) / country.population
         const visibilityFactor = state.stats.severity * 0.1 + impactRatio * 50
         country.awareness = Math.min(
           100,
@@ -169,7 +190,7 @@ export const createSimulationSlice: GameSliceCreator<
             id: `evt-${Date.now()}-${Math.random()}`,
             timestamp: state.tickCount,
             type: 'response',
-            message: `${country.name} closes land borders.`,
+            message: `${country.name} isolates network infrastructure.`,
             severity: 'warning',
             countryId: country.id,
           })
@@ -184,7 +205,7 @@ export const createSimulationSlice: GameSliceCreator<
             id: `evt-${Date.now()}-${Math.random()}`,
             timestamp: state.tickCount,
             type: 'response',
-            message: `${country.name} suspends all air travel.`,
+            message: `${country.name} suspends inter-regional data transit.`,
             severity: 'warning',
             countryId: country.id,
           })
@@ -199,7 +220,7 @@ export const createSimulationSlice: GameSliceCreator<
             id: `evt-${Date.now()}-${Math.random()}`,
             timestamp: state.tickCount,
             type: 'response',
-            message: `${country.name} shuts down seaports.`,
+            message: `${country.name} activates national airgap.`,
             severity: 'critical',
             countryId: country.id,
           })
@@ -208,16 +229,17 @@ export const createSimulationSlice: GameSliceCreator<
         if (country.awareness > 20) {
           const wealthFactor =
             { wealthy: 2.5, developing: 1.0, poor: 0.3 }[country.wealth] || 1.0
-          const chaosFactor = 1 - (country.dead / country.population) * 2
+          const chaosFactor = 1 - (country.assimilated / country.population) * 2
           country.researchContribution = Math.max(
             0,
             country.healthcare * wealthFactor * chaosFactor * 0.005
           )
         }
 
-        totalInfected += country.infected
-        totalHealthy += country.population - country.infected - country.dead
-        totalDead += country.dead
+        totalSynchronized += country.synchronized
+        totalUnlinked +=
+          country.population - country.synchronized - country.assimilated
+        totalAssimilated += country.assimilated
       }
 
       if (state.tickCount % 5 === 0) {
@@ -225,7 +247,8 @@ export const createSimulationSlice: GameSliceCreator<
           const from = state.countries.find((c) => c.id === route.from)
           const to = state.countries.find((c) => c.id === route.to)
 
-          if (!(from && to) || from.infected <= 10 || to.infected > 0) continue
+          if (!(from && to) || from.synchronized <= 10 || to.synchronized > 0)
+            continue
 
           if (route.type === 'air' && !(from.airportsOpen && to.airportsOpen))
             continue
@@ -234,7 +257,7 @@ export const createSimulationSlice: GameSliceCreator<
           if (route.type === 'land' && !(from.bordersOpen && to.bordersOpen))
             continue
 
-          const fromInfectedRatio = from.infected / from.population
+          const fromSynchronizedRatio = from.synchronized / from.population
           let traitBonus = 1.0
           if (route.type === 'air')
             traitBonus += state.traits.transmissions.air * 0.8
@@ -247,19 +270,19 @@ export const createSimulationSlice: GameSliceCreator<
               0.4
 
           const transmissionChance =
-            fromInfectedRatio *
+            fromSynchronizedRatio *
             route.traffic *
             0.02 *
             traitBonus *
             diffMult.infection
 
           if (Math.random() < transmissionChance) {
-            to.infected = Math.ceil(Math.random() * 5) + 1
+            to.synchronized = Math.ceil(Math.random() * 5) + 1
             state.events.unshift({
               id: `evt-${Date.now()}-${Math.random()}`,
               timestamp: state.tickCount,
               type: 'infection',
-              message: `Disease has crossed borders into ${to.name}!`,
+              message: `Synchronization protocol reached ${to.name}!`,
               severity: 'warning',
               countryId: to.id,
             })
@@ -267,16 +290,16 @@ export const createSimulationSlice: GameSliceCreator<
         }
       }
 
-      if (state.cure.isDetected || totalDead > 0) {
-        if (!state.cure.isDetected) {
-          state.cure.isDetected = true
-          state.cure.researchStarted = true
+      if (state.firewall.isDetected || totalAssimilated > 0) {
+        if (!state.firewall.isDetected) {
+          state.firewall.isDetected = true
+          state.firewall.researchStarted = true
           state.events.unshift({
             id: `evt-cure-start-${Date.now()}`,
             timestamp: state.tickCount,
             type: 'cure',
             message:
-              'Public health crisis declared! WHO initiates cure development.',
+              'Global security alert! Multinational task force initiates Global Firewall development.',
             severity: 'critical',
           })
         }
@@ -285,7 +308,7 @@ export const createSimulationSlice: GameSliceCreator<
           (sum, c) => sum + c.researchContribution,
           0
         )
-        state.cure.totalResearchPower = researchPower
+        state.firewall.totalResearchPower = researchPower
 
         const drugResistancePenalty =
           1 - state.traits.abilities.drugResistance * 0.2
@@ -298,21 +321,25 @@ export const createSimulationSlice: GameSliceCreator<
           drugResistancePenalty *
           hardeningPenalty *
           diffMult.cure
-        state.cure.progress = Math.min(100, state.cure.progress + cureIncrease)
+        state.firewall.progress = Math.min(
+          100,
+          state.firewall.progress + cureIncrease
+        )
       }
 
       if (state.tickCount % 20 === 0) {
-        const infectedRatio =
-          totalInfected / (totalInfected + totalHealthy + totalDead)
-        if (infectedRatio > 0) {
-          const dnaGain = Math.ceil(infectedRatio * 5 * diffMult.dna)
-          state.dnaPoints += dnaGain
+        const synchronizedRatio =
+          totalSynchronized /
+          (totalSynchronized + totalUnlinked + totalAssimilated)
+        if (synchronizedRatio > 0) {
+          const dataGain = Math.ceil(synchronizedRatio * 5 * diffMult.data)
+          state.dataPoints += dataGain
         }
       }
 
-      if (totalHealthy === 0 && totalInfected === 0) {
+      if (totalUnlinked === 0 && totalSynchronized === 0) {
         state.status = 'won'
-      } else if (state.cure.progress >= 100) {
+      } else if (state.firewall.progress >= 100) {
         state.status = 'lost'
       }
     })

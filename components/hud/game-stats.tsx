@@ -11,12 +11,15 @@ import { useGameStore } from '~/libs/store/use-game-store'
 
 export default function GameStats() {
   const countries = useGameStore((state) => state.countries)
-  const cureProgress = useGameStore((state) => state.cure.progress)
+  const firewallProgress = useGameStore((state) => state.firewall.progress)
 
-  const totalInfected = countries.reduce((sum, c) => sum + c.infected, 0)
+  const totalSynchronized = countries.reduce(
+    (sum, c) => sum + c.synchronized,
+    0
+  )
   const worldPopulation = countries.reduce((sum, c) => sum + c.population, 0)
 
-  const infectionPercentage = (totalInfected / worldPopulation) * 100
+  const synchronizationPercentage = (totalSynchronized / worldPopulation) * 100
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
@@ -29,7 +32,7 @@ export default function GameStats() {
       <div className="max-w-5xl mx-auto flex items-stretch gap-4 pointer-events-auto">
         {}
         <div className="bg-zinc-900/80 backdrop-blur-2xl border border-white/5 rounded-[2rem] px-6 py-3 flex items-center gap-4 shadow-2xl">
-          <div className="p-2 bg-red-600 rounded-2xl shadow-lg shadow-red-900/20">
+          <div className="p-2 bg-cyan-600 rounded-2xl shadow-lg shadow-cyan-900/20">
             <HugeiconsIcon
               icon={PopulationIcon}
               size={20}
@@ -38,10 +41,10 @@ export default function GameStats() {
           </div>
           <div>
             <div className="text-[10px] font-black text-zinc-500 uppercase tracking-widest leading-none mb-1">
-              Confirmed Assets
+              Synchronized Nodes
             </div>
             <div className="text-xl font-black text-white leading-none">
-              {formatNumber(totalInfected)}
+              {formatNumber(totalSynchronized)}
             </div>
           </div>
         </div>
@@ -53,20 +56,20 @@ export default function GameStats() {
               <HugeiconsIcon
                 icon={GlobalIcon}
                 size={14}
-                className="text-purple-500"
+                className="text-cyan-500"
               />
-              Global Reach
+              System Synchronization
             </div>
-            <div className="text-xs font-mono font-black text-purple-400">
-              {infectionPercentage < 0.001
+            <div className="text-xs font-mono font-black text-cyan-400">
+              {synchronizationPercentage < 0.001
                 ? '< 0.001%'
-                : `${infectionPercentage.toFixed(4)}%`}
+                : `${synchronizationPercentage.toFixed(4)}%`}
             </div>
           </div>
           <Progress
-            value={infectionPercentage}
+            value={synchronizationPercentage}
             className="h-2 bg-white/5"
-            indicatorClassName="bg-gradient-to-r from-purple-700 to-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+            indicatorClassName="bg-gradient-to-r from-cyan-700 to-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]"
           />
         </div>
 
@@ -77,18 +80,18 @@ export default function GameStats() {
               <HugeiconsIcon
                 icon={ShieldIcon}
                 size={14}
-                className="text-emerald-500"
+                className="text-red-500"
               />
-              Countermeasure
+              Global Firewall
             </div>
-            <div className="text-xs font-mono font-black text-emerald-400">
-              {cureProgress.toFixed(1)}%
+            <div className="text-xs font-mono font-black text-red-400">
+              {firewallProgress.toFixed(1)}%
             </div>
           </div>
           <Progress
-            value={cureProgress}
+            value={firewallProgress}
             className="h-1 bg-white/5"
-            indicatorClassName="bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+            indicatorClassName="bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]"
           />
         </div>
       </div>

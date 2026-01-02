@@ -63,9 +63,12 @@ export default function CountryDetailSheet() {
 
   if (!country) return null
 
-  const infectionRate =
-    country.population > 0 ? (country.infected / country.population) * 100 : 0
-  const healthyCount = country.population - country.infected - country.dead
+  const synchronizationRate =
+    country.population > 0
+      ? (country.synchronized / country.population) * 100
+      : 0
+  const unlinkedCount =
+    country.population - country.synchronized - country.assimilated
 
   return (
     <Sheet
@@ -109,38 +112,40 @@ export default function CountryDetailSheet() {
           <div className="p-4 rounded-2xl bg-zinc-900/80 border border-white/5">
             <div className="flex justify-between items-center mb-3">
               <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                Infection Status
+                Synchronization Progress
               </span>
-              <span className="text-xs font-mono text-red-400">
-                {infectionRate.toFixed(2)}%
+              <span className="text-xs font-mono text-cyan-400">
+                {synchronizationRate.toFixed(2)}%
               </span>
             </div>
             <Progress
-              value={infectionRate}
+              value={synchronizationRate}
               className="h-2 bg-zinc-800"
-              indicatorClassName="bg-gradient-to-r from-red-600 to-red-400"
+              indicatorClassName="bg-gradient-to-r from-cyan-600 to-cyan-400"
             />
             <div className="grid grid-cols-3 gap-2 mt-4">
               <div className="text-center p-2 rounded-xl bg-zinc-800/50">
-                <div className="text-lg font-bold text-red-400">
-                  {formatNumber(country.infected)}
+                <div className="text-lg font-bold text-cyan-400">
+                  {formatNumber(country.synchronized)}
                 </div>
                 <div className="text-[9px] text-zinc-500 uppercase">
-                  Infected
+                  Synchronized
                 </div>
               </div>
               <div className="text-center p-2 rounded-xl bg-zinc-800/50">
-                <div className="text-lg font-bold text-purple-400">
-                  {formatNumber(country.dead)}
-                </div>
-                <div className="text-[9px] text-zinc-500 uppercase">Dead</div>
-              </div>
-              <div className="text-center p-2 rounded-xl bg-zinc-800/50">
-                <div className="text-lg font-bold text-emerald-400">
-                  {formatNumber(healthyCount)}
+                <div className="text-lg font-bold text-magenta-400">
+                  {formatNumber(country.assimilated)}
                 </div>
                 <div className="text-[9px] text-zinc-500 uppercase">
-                  Healthy
+                  Assimilated
+                </div>
+              </div>
+              <div className="text-center p-2 rounded-xl bg-zinc-800/50">
+                <div className="text-lg font-bold text-zinc-400">
+                  {formatNumber(unlinkedCount)}
+                </div>
+                <div className="text-[9px] text-zinc-500 uppercase">
+                  Unlinked
                 </div>
               </div>
             </div>
@@ -173,19 +178,19 @@ export default function CountryDetailSheet() {
                 <HugeiconsIcon
                   icon={UserGroupIcon}
                   size={14}
-                  className="text-emerald-500"
+                  className="text-blue-500"
                 />
                 <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                  Healthcare
+                  Cyber Resilience
                 </span>
               </div>
-              <div className="text-2xl font-bold text-emerald-400 font-mono">
+              <div className="text-2xl font-bold text-blue-400 font-mono">
                 {country.healthcare}%
               </div>
               <Progress
                 value={country.healthcare}
                 className="h-1 mt-2 bg-zinc-800"
-                indicatorClassName="bg-emerald-500"
+                indicatorClassName="bg-blue-500"
               />
             </div>
           </div>
@@ -193,13 +198,13 @@ export default function CountryDetailSheet() {
           {}
           <div className="p-4 rounded-2xl bg-zinc-900/80 border border-white/5">
             <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3">
-              Transport Status
+              Infrastructure Status
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div
                 className={`flex flex-col items-center p-3 rounded-xl border transition-all ${
                   country.airportsOpen
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
                     : 'bg-red-500/10 border-red-500/30 text-red-400'
                 }`}
               >
@@ -211,7 +216,7 @@ export default function CountryDetailSheet() {
               <div
                 className={`flex flex-col items-center p-3 rounded-xl border transition-all ${
                   country.seaportsOpen
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
                     : 'bg-red-500/10 border-red-500/30 text-red-400'
                 }`}
               >
@@ -223,13 +228,13 @@ export default function CountryDetailSheet() {
               <div
                 className={`flex flex-col items-center p-3 rounded-xl border transition-all ${
                   country.bordersOpen
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
                     : 'bg-red-500/10 border-red-500/30 text-red-400'
                 }`}
               >
                 <HugeiconsIcon icon={Road01Icon} size={20} />
                 <span className="text-[9px] font-bold mt-1 uppercase">
-                  {country.bordersOpen ? 'Open' : 'Closed'}
+                  {country.bordersOpen ? 'Active' : 'Isolated'}
                 </span>
               </div>
             </div>
@@ -237,19 +242,19 @@ export default function CountryDetailSheet() {
 
           {}
           {country.researchContribution > 0 && (
-            <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+            <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <HugeiconsIcon
                     icon={GlobalIcon}
                     size={16}
-                    className="text-blue-400"
+                    className="text-red-400"
                   />
-                  <span className="text-sm font-bold text-blue-300">
-                    Contributing to Cure Research
+                  <span className="text-sm font-bold text-red-300">
+                    Contributing to Firewall Research
                   </span>
                 </div>
-                <span className="text-xs font-mono text-blue-400">
+                <span className="text-xs font-mono text-red-400">
                   +{country.researchContribution.toFixed(2)}/tick
                 </span>
               </div>

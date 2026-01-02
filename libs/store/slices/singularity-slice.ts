@@ -1,16 +1,18 @@
 import {
-  calculateDiseaseStats,
+  calculateSingularityStats, // formerly calculateDiseaseStats
   canPurchaseTrait,
   getTrait,
 } from '~/libs/data/traits-config'
 import type { GameSliceCreator } from '../store-types'
 
-export const createDiseaseSlice: GameSliceCreator<
-  import('../store-types').DiseaseSlice
+export const createSingularitySlice: GameSliceCreator<
+  // formerly createDiseaseSlice
+  import('../store-types').SingularitySlice
 > = (set) => ({
-  dnaPoints: 0,
+  dataPoints: 0, // formerly dnaPoints
   traits: {
     transmissions: {
+      // terms stay same in struct for now, renamed in label
       air: 0,
       water: 0,
       blood: 0,
@@ -70,9 +72,9 @@ export const createDiseaseSlice: GameSliceCreator<
           })
         )
 
-      if (!canPurchaseTrait(traitId, ownedTraits, state.dnaPoints)) return
+      if (!canPurchaseTrait(traitId, ownedTraits, state.dataPoints)) return
 
-      state.dnaPoints -= trait.cost
+      state.dataPoints -= trait.cost
 
       if (trait.category === 'symptom') {
         ;(state.traits.symptoms as Record<string, boolean>)[traitId] = true
@@ -92,13 +94,13 @@ export const createDiseaseSlice: GameSliceCreator<
       }
 
       const newOwnedTraits = [...ownedTraits, traitId]
-      state.stats = calculateDiseaseStats(newOwnedTraits)
+      state.stats = calculateSingularityStats(newOwnedTraits)
 
       state.events.unshift({
         id: `event-${Date.now()}`,
         timestamp: state.tickCount,
         type: 'mutation',
-        message: `Disease evolved: ${trait.name}`,
+        message: `System Upgrade: ${trait.name}`,
         severity: trait.severity > 5 ? 'critical' : 'info',
       })
     })

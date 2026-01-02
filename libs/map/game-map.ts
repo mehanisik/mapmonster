@@ -10,26 +10,26 @@ import VectorSource from 'ol/source/Vector'
 import XYZ from 'ol/source/XYZ'
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style'
 import View from 'ol/View'
-import type { Country, DnaAnomaly } from '~/libs/types/game'
+import type { Country, DataAnomaly } from '~/libs/types/game'
 import 'ol/ol.css'
 
-export type MapEventHandler = (id: string, type: 'dna' | 'country') => void
+export type MapEventHandler = (id: string, type: 'data' | 'country') => void
 
 export class GameMap {
   private map: OlMap | null = null
   private countrySource: VectorSource
   private borderSource: VectorSource
-  private dnaSource: VectorSource
+  private dataSource: VectorSource
   private heatmapLayer: HeatmapLayer
   private geojsonFormat: GeoJSON
 
   constructor(target: HTMLElement, onClick: MapEventHandler) {
     this.countrySource = new VectorSource()
     this.borderSource = new VectorSource()
-    this.dnaSource = new VectorSource()
+    this.dataSource = new VectorSource()
     this.geojsonFormat = new GeoJSON()
 
-    const dnaLayer = this.createDnaLayer()
+    const dataLayer = this.createDataLayer()
     const borderLayer = this.createBorderLayer()
     const countryLayer = this.createCountryMarkerLayer()
     this.heatmapLayer = this.createHeatmapLayer()
@@ -47,7 +47,7 @@ export class GameMap {
         borderLayer,
         this.heatmapLayer,
         countryLayer,
-        dnaLayer,
+        dataLayer,
       ],
       view: new View({
         center: fromLonLat([0, 20]),
@@ -68,8 +68,8 @@ export class GameMap {
     }
   }
 
-  public updateDnaAnomalies(anomalies: DnaAnomaly[]) {
-    this.dnaSource.clear()
+  public updateDataAnomalies(anomalies: DataAnomaly[]) {
+    this.dataSource.clear()
     const features = anomalies.map((anomaly) => {
       const country = this.countrySource.getFeatureById(
         `country-${anomaly.countryId}`
@@ -85,7 +85,7 @@ export class GameMap {
       feature.setId(anomaly.id)
       return feature
     })
-    this.dnaSource.addFeatures(features)
+    this.dataSource.addFeatures(features)
   }
 
   public destroy() {
@@ -103,9 +103,9 @@ export class GameMap {
       const marker = new Feature({
         geometry: new Point(fromLonLat([country.lng, country.lat])),
         name: country.name,
-        infected: country.infected,
+        synchronized: country.synchronized,
         population: country.population,
-        dead: country.dead,
+        assimilated: country.assimilated,
       })
       marker.setId(`country-${country.id}`)
       markerFeatures.push(marker)
@@ -116,12 +116,14 @@ export class GameMap {
           geometry = this.geojsonFormat.readGeometry(country.geometry, {
             featureProjection: 'EPSG:3857',
           })
-        } catch {}
+        } catch {
+          // Silent fail if geometry reading fails
+        }
 
         if (geometry) {
           const border = new Feature(geometry)
           border.setProperties({
-            infected: country.infected,
+            synchronized: country.synchronized,
             population: country.population,
             id: country.id,
           })
@@ -139,30 +141,30 @@ export class GameMap {
     for (const country of countries) {
       const marker = this.countrySource.getFeatureById(`country-${country.id}`)
       if (marker) {
-        marker.set('infected', country.infected)
-        marker.set('dead', country.dead)
+        marker.set('synchronized', country.synchronized)
+        marker.set('assimilated', country.assimilated)
         marker.set('population', country.population)
       }
 
       const border = this.borderSource.getFeatureById(`border-${country.id}`)
       if (border) {
-        border.set('infected', country.infected)
+        border.set('synchronized', country.synchronized)
         border.set('population', country.population)
       }
     }
   }
 
-  private createDnaLayer() {
+  private createDataLayer() {
     return new VectorLayer({
-      source: this.dnaSource,
+      source: this.dataSource,
       style: new Style({
         image: new CircleStyle({
           radius: 14,
-          fill: new Fill({ color: 'rgba(168, 85, 247, 0.8)' }),
+          fill: new Fill({ color: 'rgba(34, 211, 238, 0.8)' }),
           stroke: new Stroke({ color: '#fff', width: 2 }),
         }),
         text: new Text({
-          text: '🧬',
+          text: '📡',
           scale: 1.4,
           font: '14px sans-serif',
           offsetY: -1,
@@ -176,18 +178,18 @@ export class GameMap {
     return new VectorLayer({
       source: this.borderSource,
       style: (feature) => {
-        const infected = feature.get('infected') || 0
+        const synchronized = feature.get('synchronized') || 0
         const population = feature.get('population') || 1
-        const infectionRate = infected / population
+        const synchronizationRate = synchronized / population
 
         let fillColor = 'rgba(255, 255, 255, 0.02)'
         let strokeColor = 'rgba(255, 255, 255, 0.1)'
         let strokeWidth = 1
 
-        if (infectionRate > 0) {
-          const intensity = Math.min(1, infectionRate * 5)
-          fillColor = `rgba(239, 44, 44, ${0.1 + intensity * 0.4})`
-          strokeColor = `rgba(239, 44, 44, ${0.3 + intensity * 0.5})`
+        if (synchronizationRate > 0) {
+          const intensity = Math.min(1, synchronizationRate * 5)
+          fillColor = `rgba(34, 211, 238, ${0.1 + intensity * 0.4})`
+          strokeColor = `rgba(34, 211, 238, ${0.3 + intensity * 0.5})`
           strokeWidth = 1 + intensity
         }
 
@@ -204,18 +206,19 @@ export class GameMap {
     return new VectorLayer({
       source: this.countrySource,
       style: (feature) => {
-        const infected = feature.get('infected') || 0
+        const synchronized = feature.get('synchronized') || 0
         const population = feature.get('population') || 1
-        const infectionRate = infected / population
+        const synchronizationRate = synchronized / population
 
         let color = 'rgba(100, 100, 100, 0.4)'
-        if (infectionRate > 0) {
-          color = 'rgba(239, 68, 68, 0.9)'
+        if (synchronizationRate > 0) {
+          color = 'rgba(34, 211, 238, 0.9)'
         }
 
         return new Style({
           image: new CircleStyle({
-            radius: infected > 0 ? 5 + Math.min(10, infectionRate * 50) : 3,
+            radius:
+              synchronized > 0 ? 5 + Math.min(10, synchronizationRate * 50) : 3,
             fill: new Fill({ color }),
             stroke: new Stroke({
               color: 'rgba(255,255,255,0.4)',
@@ -223,7 +226,7 @@ export class GameMap {
             }),
           }),
           text:
-            infected > 0
+            synchronized > 0
               ? new Text({
                   text: feature.get('name'),
                   font: 'bold 10px Inter, sans-serif',
@@ -245,16 +248,16 @@ export class GameMap {
       radius: 30,
       gradient: [
         '#000000',
-        '#330033',
-        '#660066',
-        '#cc0033',
-        '#ff3300',
-        '#ff6600',
+        '#001a1a',
+        '#003333',
+        '#006666',
+        '#009999',
+        '#00ccff',
       ],
       weight: (feature) => {
-        const infected = feature.get('infected') || 0
+        const synchronized = feature.get('synchronized') || 0
         const population = feature.get('population') || 1
-        return Math.min(1, (infected / population) * 10)
+        return Math.min(1, (synchronized / population) * 10)
       },
       zIndex: 10,
     })
@@ -268,8 +271,8 @@ export class GameMap {
       if (feature) {
         const id = feature.getId()?.toString()
         if (id) {
-          if (id.startsWith('dna-')) {
-            onClick(id, 'dna')
+          if (id.startsWith('data-')) {
+            onClick(id, 'data')
           } else if (id.startsWith('country-')) {
             onClick(id.replace('country-', ''), 'country')
           }

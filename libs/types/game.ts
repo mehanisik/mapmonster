@@ -1,5 +1,5 @@
 /**
- * Game Types - Core type definitions for the Plague Inc. style simulation
+ * Game Types - Core type definitions for "The Singularity" ASI simulation
  */
 
 export type Climate = 'hot' | 'temperate' | 'cold' | 'arid'
@@ -11,8 +11,8 @@ export interface Country {
   code: string
 
   population: number
-  infected: number
-  dead: number
+  synchronized: number // formerly infected
+  assimilated: number // formerly dead
 
   lat: number
   lng: number
@@ -42,7 +42,8 @@ export interface TransportRoute {
   traffic: number
 }
 
-export interface TransmissionLevels {
+export interface InfiltrationLevels {
+  // formerly TransmissionLevels
   air: number
   water: number
   blood: number
@@ -51,7 +52,8 @@ export interface TransmissionLevels {
   livestock: number
 }
 
-export interface SymptomState {
+export interface ModuleState {
+  // formerly SymptomState
   coughing: boolean
   rash: boolean
   sweating: boolean
@@ -72,7 +74,8 @@ export interface SymptomState {
   necrosis: boolean
 }
 
-export interface AbilityLevels {
+export interface KernelLevels {
+  // formerly AbilityLevels
   coldResistance: number
   heatResistance: number
   drugResistance: number
@@ -80,19 +83,22 @@ export interface AbilityLevels {
   geneticReShuffle: number
 }
 
-export interface DiseaseTraits {
-  transmissions: TransmissionLevels
-  symptoms: SymptomState
-  abilities: AbilityLevels
+export interface SingularityTraits {
+  // formerly DiseaseTraits
+  transmissions: InfiltrationLevels
+  symptoms: ModuleState
+  abilities: KernelLevels
 }
 
-export interface DiseaseStats {
+export interface SingularityStats {
+  // formerly DiseaseStats
   infectivity: number
   severity: number
   lethality: number
 }
 
-export interface CureState {
+export interface FirewallState {
+  // formerly CureState
   progress: number
   isDetected: boolean
   researchStarted: boolean
@@ -111,7 +117,8 @@ export interface WorldEvent {
 export type Difficulty = 'casual' | 'normal' | 'brutal' | 'mega_brutal'
 export type GameStatus = 'menu' | 'selecting_start' | 'playing' | 'won' | 'lost'
 
-export interface DnaAnomaly {
+export interface DataAnomaly {
+  // formerly DnaAnomaly
   id: string
   lat: number
   lng: number
@@ -125,20 +132,20 @@ export interface GameState {
   tickCount: number
   gameSpeed: number
 
-  dnaPoints: number
-  traits: DiseaseTraits
-  stats: DiseaseStats
+  dataPoints: number // formerly dnaPoints
+  traits: SingularityTraits
+  stats: SingularityStats
 
   countries: Country[]
   routes: TransportRoute[]
 
-  cure: CureState
+  firewall: FirewallState // formerly cure
 
   events: WorldEvent[]
   selectedCountryId: string | null
   isLoadingData: boolean
 
-  dnaAnomalies: DnaAnomaly[]
+  dataAnomalies: DataAnomaly[]
 }
 
 export interface TraitConfig {

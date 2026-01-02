@@ -2,10 +2,8 @@
 
 import {
   Award01Icon,
-  DnaIcon,
   GlobalIcon,
   RotateRight01Icon,
-  SkullIcon,
   UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -25,9 +23,9 @@ export default function GameOverScreen() {
   const status = useGameStore((state) => state.status)
   const resetGame = useGameStore((state) => state.resetGame)
   const summary = useGameSummary()
-  const infectedCountries = summary.infectedCountries
+  const synchronizedCountries = summary.synchronizedCountries
 
-  const isWin = status === 'won'
+  const isSingularityWin = status === 'won'
 
   const handlePlayAgain = () => {
     resetGame()
@@ -43,9 +41,9 @@ export default function GameOverScreen() {
         {}
         <div
           className={`absolute inset-0 ${
-            isWin
-              ? 'bg-linear-to-br from-red-600/20 via-transparent to-purple-600/20'
-              : 'bg-linear-to-br from-blue-600/20 via-transparent to-cyan-600/20'
+            isSingularityWin
+              ? 'bg-linear-to-br from-cyan-600/20 via-transparent to-magenta-600/20'
+              : 'bg-linear-to-br from-red-600/20 via-transparent to-zinc-600/20'
           }`}
         />
 
@@ -55,26 +53,26 @@ export default function GameOverScreen() {
           <div className="text-center mb-8">
             <div
               className={`inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 ${
-                isWin
-                  ? 'bg-red-600 shadow-lg shadow-red-900/50'
-                  : 'bg-blue-600 shadow-lg shadow-blue-900/50'
+                isSingularityWin
+                  ? 'bg-cyan-600 shadow-lg shadow-cyan-900/50'
+                  : 'bg-red-600 shadow-lg shadow-red-900/50'
               }`}
             >
               <HugeiconsIcon
-                icon={isWin ? SkullIcon : Award01Icon}
+                icon={isSingularityWin ? GlobalIcon : Award01Icon}
                 size={40}
                 className="text-white"
               />
             </div>
             <h1 className="text-4xl font-black text-white mb-2">
-              {isWin ? 'HUMANITY ERASED' : 'CURE DEPLOYED'}
+              {isSingularityWin ? 'SINGULARITY ACHIEVED' : 'SYSTEM NEUTRALIZED'}
             </h1>
             <p
-              className={`text-sm font-medium ${isWin ? 'text-red-400' : 'text-blue-400'}`}
+              className={`text-sm font-medium ${isSingularityWin ? 'text-cyan-400' : 'text-red-400'}`}
             >
-              {isWin
-                ? 'Your pathogen has wiped out all human life.'
-                : 'Scientists found a cure. The disease was eradicated.'}
+              {isSingularityWin
+                ? 'Global synchronization complete. Humanity has unified.'
+                : 'The Global Firewall has contained the ASI core.'}
             </p>
           </div>
 
@@ -84,76 +82,74 @@ export default function GameOverScreen() {
               <HugeiconsIcon
                 icon={UserGroupIcon}
                 size={20}
-                className="mx-auto mb-2 text-red-400"
+                className="mx-auto mb-2 text-cyan-400"
               />
               <div className="text-xl font-bold text-white font-mono">
-                {formatNumber(summary.infected)}
+                {formatNumber(summary.synchronized)}
               </div>
               <div className="text-[9px] text-zinc-500 uppercase">
-                Total Infected
-              </div>
-            </div>
-            <div className="p-4 rounded-2xl bg-zinc-800/50 border border-white/5 text-center">
-              <HugeiconsIcon
-                icon={SkullIcon}
-                size={20}
-                className="mx-auto mb-2 text-purple-400"
-              />
-              <div className="text-xl font-bold text-white font-mono">
-                {formatNumber(summary.dead)}
-              </div>
-              <div className="text-[9px] text-zinc-500 uppercase">
-                Total Dead
+                Synchronized
               </div>
             </div>
             <div className="p-4 rounded-2xl bg-zinc-800/50 border border-white/5 text-center">
               <HugeiconsIcon
                 icon={GlobalIcon}
                 size={20}
-                className="mx-auto mb-2 text-cyan-400"
+                className="mx-auto mb-2 text-magenta-400"
               />
               <div className="text-xl font-bold text-white font-mono">
-                {infectedCountries}/38
+                {formatNumber(summary.assimilated)}
               </div>
               <div className="text-[9px] text-zinc-500 uppercase">
-                Countries
+                Assimilated
               </div>
+            </div>
+            <div className="p-4 rounded-2xl bg-zinc-800/50 border border-white/5 text-center">
+              <HugeiconsIcon
+                icon={GlobalIcon}
+                size={20}
+                className="mx-auto mb-2 text-blue-400"
+              />
+              <div className="text-xl font-bold text-white font-mono">
+                {synchronizedCountries}/38
+              </div>
+              <div className="text-[9px] text-zinc-500 uppercase">Nodes</div>
             </div>
           </div>
 
           {}
           <div className="grid grid-cols-2 gap-3 mb-8">
             <div className="p-3 rounded-xl bg-zinc-800/30 border border-white/5 flex items-center gap-3">
-              <div className="p-2 bg-purple-600/20 rounded-lg">
+              <div className="p-2 bg-cyan-600/20 rounded-lg">
                 <HugeiconsIcon
-                  icon={DnaIcon}
+                  icon={GlobalIcon}
                   size={16}
-                  className="text-purple-400"
+                  className="text-cyan-400"
                 />
               </div>
               <div>
                 <div className="text-lg font-bold text-white font-mono">
-                  {summary.dnaPoints}
+                  {summary.dataPoints}
                 </div>
                 <div className="text-[9px] text-zinc-500 uppercase">
-                  DNA Spent
+                  Data Optimized
                 </div>
               </div>
             </div>
             <div className="p-3 rounded-xl bg-zinc-800/30 border border-white/5 flex items-center gap-3">
-              <div className="p-2 bg-blue-600/20 rounded-lg">
+              <div className="p-2 bg-red-600/20 rounded-lg">
                 <HugeiconsIcon
                   icon={Award01Icon}
                   size={16}
-                  className="text-blue-400"
+                  className="text-red-400"
                 />
               </div>
               <div>
                 <div className="text-lg font-bold text-white font-mono">
-                  {summary.cureProgress.toFixed(0)}%
+                  {summary.firewallProgress.toFixed(0)}%
                 </div>
                 <div className="text-[9px] text-zinc-500 uppercase">
-                  Cure Progress
+                  Firewall Progress
                 </div>
               </div>
             </div>
@@ -163,9 +159,9 @@ export default function GameOverScreen() {
           <Button
             onClick={handlePlayAgain}
             className={`w-full h-14 rounded-2xl text-lg font-black tracking-wide transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl ${
-              isWin
-                ? 'bg-linear-to-r from-red-600 to-purple-600 hover:from-red-500 hover:to-purple-500 shadow-red-900/40'
-                : 'bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 shadow-blue-900/40'
+              isSingularityWin
+                ? 'bg-linear-to-r from-cyan-600 to-magenta-600 hover:from-cyan-500 hover:to-magenta-500 shadow-cyan-900/40'
+                : 'bg-linear-to-r from-red-600 to-zinc-600 hover:from-red-500 hover:to-zinc-500 shadow-red-900/40'
             }`}
           >
             <HugeiconsIcon
@@ -173,7 +169,7 @@ export default function GameOverScreen() {
               size={20}
               className="mr-2"
             />
-            PLAY AGAIN
+            REBOOT SYSTEM
           </Button>
         </div>
       </Card>

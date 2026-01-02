@@ -4,25 +4,31 @@ import { useGameStore } from './use-game-store'
 export function useGameSummary() {
   return useGameStore(
     useShallow((state) => {
-      const infected = state.countries.reduce((sum, c) => sum + c.infected, 0)
-      const dead = state.countries.reduce((sum, c) => sum + c.dead, 0)
+      const synchronized = state.countries.reduce(
+        (sum, c) => sum + c.synchronized,
+        0
+      )
+      const assimilated = state.countries.reduce(
+        (sum, c) => sum + c.assimilated,
+        0
+      )
       const population = state.countries.reduce(
         (sum, c) => sum + c.population,
         0
       )
-      const infectedCountries = state.countries.filter(
-        (c) => c.infected > 0
+      const synchronizedCountries = state.countries.filter(
+        (c) => c.synchronized > 0
       ).length
 
       return {
-        infected,
-        dead,
-        healthy: population - infected - dead,
+        synchronized,
+        assimilated,
+        healthy: population - synchronized - assimilated,
         population,
-        infectedCountries,
-        cureProgress: state.cure.progress,
-        isDetected: state.cure.isDetected,
-        dnaPoints: state.dnaPoints,
+        synchronizedCountries,
+        firewallProgress: state.firewall.progress,
+        isDetected: state.firewall.isDetected,
+        dataPoints: state.dataPoints,
         infectivity: state.stats.infectivity,
         severity: state.stats.severity,
         lethality: state.stats.lethality,
@@ -66,9 +72,9 @@ export function useSelectedCountry() {
   })
 }
 
-export function useInfectedCountries() {
+export function useSynchronizedCountries() {
   return useGameStore(
-    useShallow((state) => state.countries.filter((c) => c.infected > 0))
+    useShallow((state) => state.countries.filter((c) => c.synchronized > 0))
   )
 }
 

@@ -8,24 +8,24 @@ import 'ol/ol.css'
 export default function MapComponent() {
   const status = useGameStore((state) => state.status)
   const countries = useGameStore((state) => state.countries)
-  const dnaAnomalies = useGameStore((state) => state.dnaAnomalies)
+  const dataAnomalies = useGameStore((state) => state.dataAnomalies)
   const selectCountry = useGameStore((state) => state.selectCountry)
-  const infectStartingCountry = useGameStore(
-    (state) => state.infectStartingCountry
+  const initializeStartingNode = useGameStore(
+    (state) => state.initializeStartingNode
   )
-  const collectDnaAnomaly = useGameStore((state) => state.collectDnaAnomaly)
+  const collectDataAnomaly = useGameStore((state) => state.collectDataAnomaly)
 
   const mapElement = useRef<HTMLDivElement>(null)
   const gameMap = useRef<GameMap | null>(null)
 
   const handleMapClick = useEffectEvent(
-    (id: string, type: 'dna' | 'country') => {
-      if (type === 'dna') {
-        collectDnaAnomaly(id)
+    (id: string, type: 'data' | 'country') => {
+      if (type === 'data') {
+        collectDataAnomaly(id)
       } else if (type === 'country') {
         const countryId = id
         if (status === 'selecting_start') {
-          infectStartingCountry(countryId)
+          initializeStartingNode(countryId)
         } else {
           selectCountry(countryId)
         }
@@ -51,9 +51,9 @@ export default function MapComponent() {
 
   useEffect(() => {
     if (gameMap.current) {
-      gameMap.current.updateDnaAnomalies(dnaAnomalies)
+      gameMap.current.updateDataAnomalies(dataAnomalies)
     }
-  }, [dnaAnomalies])
+  }, [dataAnomalies])
 
   return (
     <div

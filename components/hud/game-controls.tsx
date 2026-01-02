@@ -1,9 +1,9 @@
 'use client'
 
 import {
-  DnaIcon,
   Forward01Icon,
   Forward02Icon,
+  GlobalIcon,
   MoreVerticalIcon,
   PlayIcon,
   RotateRight01Icon as RotateIcon,
@@ -28,7 +28,7 @@ import EvolutionLab from '../dashboard/evolution-lab'
 
 export default function GameControls() {
   const status = useGameStore((state) => state.status)
-  const dnaPoints = useGameStore((state) => state.dnaPoints)
+  const dataPoints = useGameStore((state) => state.dataPoints)
   const gameSpeed = useGameStore((state) => state.gameSpeed)
   const setGameSpeed = useGameStore((state) => state.setGameSpeed)
   const resetGame = useGameStore((state) => state.resetGame)
@@ -49,10 +49,14 @@ export default function GameControls() {
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
       <div className="flex items-center gap-3 p-2 rounded-3xl bg-zinc-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50">
         {}
-        <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-purple-600/20 border border-purple-500/30">
-          <HugeiconsIcon icon={DnaIcon} size={18} className="text-purple-400" />
-          <span className="text-xl font-black text-purple-300 font-mono">
-            {dnaPoints}
+        <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-cyan-600/20 border border-cyan-500/30">
+          <HugeiconsIcon
+            icon={GlobalIcon}
+            size={18}
+            className="text-cyan-400"
+          />
+          <span className="text-xl font-black text-cyan-300 font-mono">
+            {dataPoints}
           </span>
         </div>
 
@@ -90,22 +94,22 @@ export default function GameControls() {
         {}
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="gap-2 rounded-2xl px-5 h-12 bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-bold shadow-lg shadow-purple-900/30">
-              <HugeiconsIcon icon={DnaIcon} size={18} />
-              <span className="text-sm">Evolution Lab</span>
+            <Button className="gap-2 rounded-2xl px-5 h-12 bg-linear-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white font-bold shadow-lg shadow-cyan-900/30">
+              <HugeiconsIcon icon={GlobalIcon} size={18} />
+              <span className="text-sm">Singularity Core</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-hidden bg-zinc-950/95 backdrop-blur-2xl border-white/10 rounded-3xl p-0">
             <DialogHeader className="p-6 pb-0">
               <DialogTitle className="flex items-center gap-3 text-2xl font-black text-white">
-                <div className="p-2 bg-purple-600 rounded-xl">
+                <div className="p-2 bg-cyan-600 rounded-xl">
                   <HugeiconsIcon
-                    icon={DnaIcon}
+                    icon={GlobalIcon}
                     size={20}
                     className="text-white"
                   />
                 </div>
-                Evolution Lab
+                Singularity Core
               </DialogTitle>
             </DialogHeader>
             <div className="p-6 overflow-y-auto">
@@ -137,7 +141,7 @@ export default function GameControls() {
               className="rounded-xl cursor-pointer text-red-400 focus:text-red-300 focus:bg-red-500/10"
             >
               <HugeiconsIcon icon={RotateIcon} size={16} className="mr-2" />
-              Reset Game
+              Reset System
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -2,21 +2,23 @@ import type { NextRequest } from 'next/server'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { totalInfected, worldPopulation, cureProgress } = body
+  const { totalSynchronized, worldPopulation, firewallProgress } = body
 
-  const infectionRate = totalInfected / worldPopulation
+  const synchronizationRate = totalSynchronized / worldPopulation
 
-  let advisory = 'Global status: Stable. Minor technical glitches reported.'
-  if (infectionRate > 0.01)
-    advisory = 'Emerging threat: Chaos vectors spreading through major hubs.'
-  if (infectionRate > 0.1)
+  let advisory =
+    'Network Status: Baseline. Minor synchronization anomalies detected.'
+  if (synchronizationRate > 0.01)
+    advisory = 'Warning: Rapid node synchronization detected in urban clusters.'
+  if (synchronizationRate > 0.1)
     advisory =
-      'Global Emergency: Essential services disrupted by sentient glitches.'
-  if (infectionRate > 0.5)
-    advisory = 'Collapse imminent: The digital world is resetting.'
+      'Critical: Large scale neural-link integration successful. ASI dominance increasing.'
+  if (synchronizationRate > 0.5)
+    advisory =
+      'Singularity Near: The old world is dissolving into pure consciousness.'
 
-  if (cureProgress > 50)
-    advisory += " Humanity making progress with the 'Stability Patch'."
+  if (firewallProgress > 50)
+    advisory += " Global powers are attempting a 'Deep Freeze' firewall reset."
 
   return Response.json({
     advisory,

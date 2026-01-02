@@ -16,7 +16,7 @@ export const createGameSlice: GameSliceCreator<
     set((state) => {
       state.status = 'selecting_start'
       state.tickCount = 0
-      state.dnaPoints = 5
+      state.dataPoints = 5
     })
   },
 
@@ -36,8 +36,8 @@ export const createGameSlice: GameSliceCreator<
     set((state) => {
       const savedCountries = state.countries.map((c) => ({
         ...c,
-        infected: 0,
-        dead: 0,
+        synchronized: 0,
+        assimilated: 0,
         bordersOpen: true,
         airportsOpen: true,
         seaportsOpen: true,
@@ -56,7 +56,7 @@ export const createGameSlice: GameSliceCreator<
       state.selectedCountryId = null
       state.isLoadingData = false
 
-      state.dnaPoints = 0
+      state.dataPoints = 0
       state.traits = {
         transmissions: {
           air: 0,
@@ -93,13 +93,13 @@ export const createGameSlice: GameSliceCreator<
       }
       state.stats = { infectivity: 0, severity: 0, lethality: 0 }
 
-      state.cure = {
+      state.firewall = {
         progress: 0,
         isDetected: false,
         researchStarted: false,
         totalResearchPower: 0,
       }
-      state.dnaAnomalies = []
+      state.dataAnomalies = []
 
       state.events = []
     })

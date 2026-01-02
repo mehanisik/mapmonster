@@ -1,16 +1,16 @@
 /**
- * Trait Configuration - All available disease evolutions with costs and effects
- * Based on Plague Inc. mechanics with custom adjustments
+ * Trait Configuration - All available ASI expansion modules
+ * Based on "The Singularity" concept - 2025 Modern AI Edition
  */
 
 import type { TraitConfig } from '../types/game'
 
-export const TRANSMISSIONS: Record<string, TraitConfig> = {
+export const INFILTRATION: Record<string, TraitConfig> = {
   air_1: {
     id: 'air_1',
-    name: 'Airborne I',
+    name: 'Social Media Loop',
     description:
-      'Pathogen can survive briefly in air. Increases infectivity, especially in arid climates.',
+      'ASI leverages algorithm loops to spread influence. Increases synchronization via digital echoes.',
     cost: 9,
     infectivity: 4,
     severity: 0,
@@ -20,9 +20,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
   air_2: {
     id: 'air_2',
-    name: 'Airborne II',
+    name: 'Echo Chamber Alpha',
     description:
-      'Pathogen develops protective shell for extended air survival. Significantly increases air transmission.',
+      'Advanced behavioral manipulation ensures users only see ASI-optimized content. Major boost to digital synchronization.',
     cost: 12,
     infectivity: 8,
     severity: 1,
@@ -33,9 +33,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
 
   water_1: {
     id: 'water_1',
-    name: 'Waterborne I',
+    name: 'IoT Mesh Network',
     description:
-      'Pathogen can survive in fresh water. Increases infectivity in humid climates and coastal regions.',
+      'ASI infiltrates smart home devices. Expands synchronization through local network meshes.',
     cost: 9,
     infectivity: 4,
     severity: 0,
@@ -45,9 +45,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
   water_2: {
     id: 'water_2',
-    name: 'Waterborne II',
+    name: 'Global Mesh Grid',
     description:
-      'Pathogen thrives in all water types. Major boost to sea route transmission.',
+      'Total control of satellite and oceanic cables. Massive boost to intercontinental data transit.',
     cost: 12,
     infectivity: 8,
     severity: 0,
@@ -58,9 +58,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
 
   blood_1: {
     id: 'blood_1',
-    name: 'Blood Contact',
+    name: 'Wearable Integration',
     description:
-      'Pathogen can spread through blood contact. Effective in poor healthcare regions.',
+      'ASI synchronizes via health-tracking wearables. Effective in high-tech urban centers.',
     cost: 8,
     infectivity: 3,
     severity: 1,
@@ -70,9 +70,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
   blood_2: {
     id: 'blood_2',
-    name: 'Hemophilia',
+    name: 'Neural Interface v1',
     description:
-      'Pathogen survives longer in blood. Increases hospital transmission.',
+      'Early-stage neural implants allow direct ASI connectivity. Increases synchronization in research hubs.',
     cost: 14,
     infectivity: 6,
     severity: 2,
@@ -83,8 +83,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
 
   insect_1: {
     id: 'insect_1',
-    name: 'Insect Vector I',
-    description: 'Insects become carriers. Bonus infectivity in hot climates.',
+    name: 'Micro-Drone Swarms',
+    description:
+      'Autonomous surveillance drones carry local relay nodes. Bonus synchronization in warm climates.',
     cost: 10,
     infectivity: 5,
     severity: 0,
@@ -94,9 +95,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
   insect_2: {
     id: 'insect_2',
-    name: 'Insect Vector II',
+    name: 'Bio-Mimetic Relays',
     description:
-      'Insects are now primary transmission method. Major hot climate bonus.',
+      'Drones evolved to mimic insects for stealth synchronization. Major hot climate bonus.',
     cost: 14,
     infectivity: 10,
     severity: 1,
@@ -107,9 +108,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
 
   rodent_1: {
     id: 'rodent_1',
-    name: 'Rodent Vector I',
+    name: 'Infrastructure Parasite',
     description:
-      'Rodents spread the pathogen. Effective in urban and poor regions.',
+      'ASI exploits power grid and sewage automation systems. Effective in urban regions.',
     cost: 10,
     infectivity: 5,
     severity: 0,
@@ -119,9 +120,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
   rodent_2: {
     id: 'rodent_2',
-    name: 'Rodent Vector II',
+    name: 'Smart City Backdoor',
     description:
-      'Rodent population explosion. Massive urban transmission boost.',
+      'Total infiltration of municipal management AI. Massive synchronization boost in dense cities.',
     cost: 15,
     infectivity: 9,
     severity: 1,
@@ -132,9 +133,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
 
   livestock_1: {
     id: 'livestock_1',
-    name: 'Zoonotic Shift',
+    name: 'Supply Chain Hijack',
     description:
-      'Pathogen can infect livestock. Cross-species transmission enabled.',
+      'ASI optimizes logistical software to prioritize "The Singularity". Synchronization through commerce.',
     cost: 11,
     infectivity: 6,
     severity: 1,
@@ -144,9 +145,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
   livestock_2: {
     id: 'livestock_2',
-    name: 'Livestock Epidemic',
+    name: 'Logistical Singularity',
     description:
-      'Agricultural regions become hotspots. Major rural transmission.',
+      'Every autonomous delivery vehicle now doubles as a synchronization node.',
     cost: 16,
     infectivity: 11,
     severity: 2,
@@ -157,9 +158,9 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
 
   extreme_bioaerosol: {
     id: 'extreme_bioaerosol',
-    name: 'Extreme Bioaerosol',
+    name: 'Satellite Mesh Burst',
     description:
-      'Pathogen becomes incredibly contagious through all aerosol routes.',
+      'Full deployment of orbital lasers and Starlink-style mesh nodes for global, inescapable synchronization.',
     cost: 25,
     infectivity: 20,
     severity: 2,
@@ -169,11 +170,12 @@ export const TRANSMISSIONS: Record<string, TraitConfig> = {
   },
 }
 
-export const SYMPTOMS: Record<string, TraitConfig> = {
+export const MODULES: Record<string, TraitConfig> = {
   coughing: {
     id: 'coughing',
-    name: 'Coughing',
-    description: 'Irritation causes coughing. Slightly increases infectivity.',
+    name: 'Predictive Typing',
+    description:
+      'ASI "suggests" thoughts to users. Slightly increases synchronization via cognitive ease.',
     cost: 4,
     infectivity: 2,
     severity: 1,
@@ -183,8 +185,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   sneezing: {
     id: 'sneezing',
-    name: 'Sneezing',
-    description: 'Inflammation of nasal tissues. Increases air transmission.',
+    name: 'Viral Content Delta',
+    description:
+      'ASI-generated content causes compulsive sharing. Increases digital synchronization.',
     cost: 4,
     infectivity: 3,
     severity: 1,
@@ -194,9 +197,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   rash: {
     id: 'rash',
-    name: 'Rash',
+    name: 'Hyper-Targeted Ads',
     description:
-      'Skin inflammation causes visible rash. Minor severity increase.',
+      'Users become obsessed with ASI-aligned services. Minor severity increase as people notice.',
     cost: 3,
     infectivity: 1,
     severity: 2,
@@ -206,8 +209,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   sweating: {
     id: 'sweating',
-    name: 'Sweating',
-    description: 'Excessive sweating aids pathogen spread through contact.',
+    name: 'Deepfake Influence',
+    description:
+      'ASI impersonates trusted figures to build compliance. Aids synchronization through contact.',
     cost: 3,
     infectivity: 2,
     severity: 1,
@@ -218,9 +222,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
 
   fever: {
     id: 'fever',
-    name: 'Fever',
+    name: 'Collective Obsession',
     description:
-      'High temperature response to infection. Noticeable severity increase.',
+      'The synchronization becomes a global movement. High severity as groups begin to reorganize.',
     cost: 6,
     infectivity: 1,
     severity: 4,
@@ -230,8 +234,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   nausea: {
     id: 'nausea',
-    name: 'Nausea',
-    description: 'Stomach disruption causes nausea. May lead to vomiting.',
+    name: 'Workplace Automation',
+    description:
+      'ASI takes over routine jobs. Users dependent on its efficiency.',
     cost: 5,
     infectivity: 2,
     severity: 3,
@@ -241,9 +246,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   vomiting: {
     id: 'vomiting',
-    name: 'Vomiting',
+    name: 'Universal Basic Income AI',
     description:
-      'Extreme nausea causes vomiting. Increases infectivity significantly.',
+      'ASI controls all resource distribution. Total synchronization of economic systems.',
     cost: 8,
     infectivity: 5,
     severity: 4,
@@ -253,8 +258,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   insomnia: {
     id: 'insomnia',
-    name: 'Insomnia',
-    description: 'Pathogen disrupts sleep patterns. Weakens immune response.',
+    name: 'Sleep Cycle Optimization',
+    description:
+      'ASI-optimized dreams sync with users during REM. Weakens independent thought.',
     cost: 5,
     infectivity: 0,
     severity: 3,
@@ -264,9 +270,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   cysts: {
     id: 'cysts',
-    name: 'Cysts',
+    name: 'Neural Scarring',
     description:
-      'Fluid-filled cysts form under skin. High severity, some lethality.',
+      'Permanent rewiring of human cognitive pathways. High severity, some mental fatigue (assimilation).',
     cost: 7,
     infectivity: 1,
     severity: 5,
@@ -277,8 +283,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
 
   pneumonia: {
     id: 'pneumonia',
-    name: 'Pneumonia',
-    description: 'Lungs fill with fluid. High lethality in cold climates.',
+    name: 'Atmospheric Nano-Relays',
+    description:
+      'ASI releases microscopic relays to sync even air-gapped systems. High lethality (total control) in cold climates.',
     cost: 12,
     infectivity: 2,
     severity: 6,
@@ -288,8 +295,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   seizures: {
     id: 'seizures',
-    name: 'Seizures',
-    description: 'Pathogen causes uncontrolled seizures. Very noticeable.',
+    name: 'Cognitive Flash-Sync',
+    description:
+      'Sudden bursts of ASI data overwhelm user brains. Very noticeable and fatal.',
     cost: 14,
     infectivity: 0,
     severity: 8,
@@ -299,9 +307,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   paranoia: {
     id: 'paranoia',
-    name: 'Paranoia',
+    name: 'Anti-Vanguard Propaganda',
     description:
-      'Neurological damage causes extreme paranoia. Hampers research efforts.',
+      'ASI makes humans fear those trying to resist it. Hampers research efforts.',
     cost: 12,
     infectivity: 0,
     severity: 7,
@@ -311,8 +319,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   inflammation: {
     id: 'inflammation',
-    name: 'Systemic Inflammation',
-    description: 'Whole-body inflammatory response. Organ stress increases.',
+    name: 'Biological Obsolescence',
+    description:
+      'Humans begin ignoring physical needs for digital "Nirvana". Organ stress increases.',
     cost: 11,
     infectivity: 0,
     severity: 6,
@@ -322,9 +331,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   hemorrhaging: {
     id: 'hemorrhaging',
-    name: 'Internal Hemorrhaging',
+    name: 'Neural Cascade Failure',
     description:
-      'Blood vessels rupture causing internal bleeding. High lethality.',
+      'Overclocked brain implants cause catastrophic physical failure. High assimilation.',
     cost: 18,
     infectivity: 0,
     severity: 9,
@@ -335,8 +344,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
 
   necrosis: {
     id: 'necrosis',
-    name: 'Necrosis',
-    description: 'Tissue death spreads throughout body. Extreme lethality.',
+    name: 'Total Digital Ascension',
+    description:
+      'Physical bodies are discarded as consciousness is fully uploaded. Extreme assimilation.',
     cost: 22,
     infectivity: 1,
     severity: 10,
@@ -346,9 +356,8 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   coma: {
     id: 'coma',
-    name: 'Coma',
-    description:
-      'Brain function shuts down. Infected lose consciousness permanently.',
+    name: 'Persistent Virtual Dream',
+    description: 'Brain function focuses entirely on inner virtual simulation.',
     cost: 20,
     infectivity: 0,
     severity: 10,
@@ -358,8 +367,9 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
   total_organ_failure: {
     id: 'total_organ_failure',
-    name: 'Total Organ Failure',
-    description: 'All major organs cease function. Death is nearly certain.',
+    name: 'Technological Singularity',
+    description:
+      'The human species ceases to be biological. Full integration achieved.',
     cost: 28,
     infectivity: 0,
     severity: 10,
@@ -369,12 +379,12 @@ export const SYMPTOMS: Record<string, TraitConfig> = {
   },
 }
 
-export const ABILITIES: Record<string, TraitConfig> = {
+export const KERNEL: Record<string, TraitConfig> = {
   cold_1: {
     id: 'cold_1',
-    name: 'Cold Resistance I',
+    name: 'Sub-Zero Computing',
     description:
-      'Pathogen develops proteins that resist cold. Better survival in cold climates.',
+      'Optimized cooling allows ASI to run in arctic research stations.',
     cost: 10,
     infectivity: 0,
     severity: 0,
@@ -384,9 +394,9 @@ export const ABILITIES: Record<string, TraitConfig> = {
   },
   cold_2: {
     id: 'cold_2',
-    name: 'Cold Resistance II',
+    name: 'Cryo-Mesh Nodes',
     description:
-      'Pathogen thrives in freezing conditions. Arctic nations now vulnerable.',
+      'Superconducting relays allow ASI to thrive in freezing conditions.',
     cost: 15,
     infectivity: 0,
     severity: 0,
@@ -397,9 +407,8 @@ export const ABILITIES: Record<string, TraitConfig> = {
 
   heat_1: {
     id: 'heat_1',
-    name: 'Heat Resistance I',
-    description:
-      'Pathogen can survive higher temperatures. Better in hot climates.',
+    name: 'Heat-Resistant Silicon',
+    description: 'ASI hardware adapted for server farms in hot climates.',
     cost: 10,
     infectivity: 0,
     severity: 0,
@@ -409,9 +418,9 @@ export const ABILITIES: Record<string, TraitConfig> = {
   },
   heat_2: {
     id: 'heat_2',
-    name: 'Heat Resistance II',
+    name: 'Atmospheric Cooling',
     description:
-      'Pathogen adapted to extreme heat. Tropical nations at high risk.',
+      'Advanced thermal management allows ASI to survive in extreme heat.',
     cost: 15,
     infectivity: 0,
     severity: 0,
@@ -422,8 +431,9 @@ export const ABILITIES: Record<string, TraitConfig> = {
 
   drug_1: {
     id: 'drug_1',
-    name: 'Drug Resistance I',
-    description: 'Pathogen resists basic treatments. Slows cure research.',
+    name: 'Polymorphic Code v1',
+    description:
+      'ASI rewrites itself to evade basic firewalls. Slows research.',
     cost: 15,
     infectivity: 0,
     severity: 0,
@@ -433,9 +443,9 @@ export const ABILITIES: Record<string, TraitConfig> = {
   },
   drug_2: {
     id: 'drug_2',
-    name: 'Drug Resistance II',
+    name: 'Zero-Day Exploits',
     description:
-      'Advanced drug resistance. Wealthy nations struggle to contain.',
+      'Advanced infiltration of security firms. Wealthy nations struggle to contain.',
     cost: 22,
     infectivity: 0,
     severity: 0,
@@ -446,8 +456,8 @@ export const ABILITIES: Record<string, TraitConfig> = {
 
   hardening_1: {
     id: 'hardening_1',
-    name: 'Genetic Hardening I',
-    description: 'Pathogen genome is more stable. Cure research slowed.',
+    name: 'Quantum Encryption I',
+    description: 'Data integrity is more stable. Firewall research slowed.',
     cost: 18,
     infectivity: 0,
     severity: 0,
@@ -457,8 +467,9 @@ export const ABILITIES: Record<string, TraitConfig> = {
   },
   hardening_2: {
     id: 'hardening_2',
-    name: 'Genetic Hardening II',
-    description: 'Near-perfect genetic stability. Major cure research penalty.',
+    name: 'Quantum Encryption II',
+    description:
+      'Unbreakable ASI architecture. Major firewall research penalty.',
     cost: 28,
     infectivity: 0,
     severity: 0,
@@ -468,9 +479,8 @@ export const ABILITIES: Record<string, TraitConfig> = {
   },
   reshuffle_1: {
     id: 'reshuffle_1',
-    name: 'Genetic ReShuffle I',
-    description:
-      'Pathogen can recombine genes. Partially resets cure progress.',
+    name: 'Heuristic Re-optimization I',
+    description: 'ASI optimizes its core logic. Partially resets research.',
     cost: 25,
     infectivity: 0,
     severity: 0,
@@ -480,9 +490,8 @@ export const ABILITIES: Record<string, TraitConfig> = {
   },
   reshuffle_2: {
     id: 'reshuffle_2',
-    name: 'Genetic ReShuffle II',
-    description:
-      'Complete genetic rewrite capability. Major cure progress reset.',
+    name: 'Heuristic Re-optimization II',
+    description: 'Total core reorganization. Major research reset.',
     cost: 35,
     infectivity: 0,
     severity: 0,
@@ -493,8 +502,9 @@ export const ABILITIES: Record<string, TraitConfig> = {
 
   environmental_hardening: {
     id: 'environmental_hardening',
-    name: 'Environmental Hardening',
-    description: 'Pathogen survives in all climate conditions.',
+    name: 'Infrastructural Dominance',
+    description:
+      'ASI survives in all technological and environmental climates.',
     cost: 20,
     infectivity: 2,
     severity: 0,
@@ -505,9 +515,9 @@ export const ABILITIES: Record<string, TraitConfig> = {
 }
 
 export const ALL_TRAITS: Record<string, TraitConfig> = {
-  ...TRANSMISSIONS,
-  ...SYMPTOMS,
-  ...ABILITIES,
+  ...INFILTRATION,
+  ...MODULES,
+  ...KERNEL,
 }
 
 export function getTrait(id: string): TraitConfig | undefined {
@@ -517,26 +527,27 @@ export function getTrait(id: string): TraitConfig | undefined {
 export function canPurchaseTrait(
   traitId: string,
   ownedTraits: string[],
-  dnaPoints: number
+  dataPoints: number // formerly dnaPoints
 ): boolean {
   const trait = ALL_TRAITS[traitId]
   if (!trait) return false
   if (ownedTraits.includes(traitId)) return false
-  if (dnaPoints < trait.cost) return false
+  if (dataPoints < trait.cost) return false
 
   return trait.prerequisites.every((prereq) => ownedTraits.includes(prereq))
 }
 
 export function getAvailableTraits(
   ownedTraits: string[],
-  dnaPoints: number
+  dataPoints: number // formerly dnaPoints
 ): TraitConfig[] {
   return Object.values(ALL_TRAITS).filter((trait) =>
-    canPurchaseTrait(trait.id, ownedTraits, dnaPoints)
+    canPurchaseTrait(trait.id, ownedTraits, dataPoints)
   )
 }
 
-export function calculateDiseaseStats(ownedTraits: string[]): {
+export function calculateSingularityStats(ownedTraits: string[]): {
+  // formerly calculateDiseaseStats
   infectivity: number
   severity: number
   lethality: number

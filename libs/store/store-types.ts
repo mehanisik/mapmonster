@@ -1,13 +1,13 @@
 import type { StateCreator } from 'zustand'
 import type {
   Country,
-  CureState,
+  DataAnomaly,
   Difficulty,
-  DiseaseStats,
-  DiseaseTraits,
-  DnaAnomaly,
+  FirewallState,
   GameStatus,
   RouteType,
+  SingularityStats,
+  SingularityTraits,
   TransportRoute,
   WorldEvent,
 } from '~/libs/types/game'
@@ -15,14 +15,14 @@ import type {
 export type {
   Country,
   Difficulty,
-  DiseaseStats,
-  DiseaseTraits,
+  SingularityStats,
+  SingularityTraits,
   GameStatus,
   RouteType,
   TransportRoute,
   WorldEvent,
-  DnaAnomaly,
-  CureState,
+  DataAnomaly,
+  FirewallState,
 }
 
 export interface GameSlice {
@@ -43,23 +43,24 @@ export interface WorldSlice {
   isLoadingData: boolean
   initializeGame: () => Promise<void>
   selectCountry: (countryId: string | null) => void
-  infectStartingCountry: (countryId: string) => void
+  initializeStartingNode: (countryId: string) => void // formerly infectStartingCountry
 }
 
-export interface DiseaseSlice {
-  dnaPoints: number
-  traits: DiseaseTraits
-  stats: DiseaseStats
+export interface SingularitySlice {
+  // formerly DiseaseSlice
+  dataPoints: number // formerly dnaPoints
+  traits: SingularityTraits
+  stats: SingularityStats
   purchaseTrait: (traitId: string) => void
 }
 
 export interface SimulationSlice {
-  cure: CureState
-  dnaAnomalies: DnaAnomaly[]
+  firewall: FirewallState // formerly cure
+  dataAnomalies: DataAnomaly[] // formerly dnaAnomalies
   gameTick: () => void
-  spawnDnaAnomaly: () => void
-  collectDnaAnomaly: (id: string) => void
-  infectCountry: (countryId: string, count: number) => void
+  spawnDataAnomaly: () => void // formerly spawnDnaAnomaly
+  collectDataAnomaly: (id: string) => void // formerly collectDnaAnomaly
+  synchronizeCountry: (countryId: string, count: number) => void // formerly infectCountry
 }
 
 export interface EventSlice {
@@ -74,7 +75,7 @@ export interface EventSlice {
 
 export type GameStore = GameSlice &
   WorldSlice &
-  DiseaseSlice &
+  SingularitySlice &
   SimulationSlice &
   EventSlice
 
